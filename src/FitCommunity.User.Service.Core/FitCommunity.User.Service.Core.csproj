@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FitCommunity.User.Service.Contracts\FitCommunity.User.Service.Contracts.csproj" />
     <ProjectReference Include="..\FitCommunity.User.Service.Domain\FitCommunity.User.Service.Domain.csproj" />
   </ItemGroup>
 
