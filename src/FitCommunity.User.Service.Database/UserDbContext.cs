@@ -1,4 +1,5 @@
 ﻿using FitCommunity.User.Service.Core;
+using FitCommunity.User.Service.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitCommunity.User.Service.Database
@@ -11,5 +12,6 @@ namespace FitCommunity.User.Service.Database
         }
 
         public DbSet<Domain.User> Users { get ; set ; }
+        public DbSet<Role> Roles { get; set; }
     }
 }

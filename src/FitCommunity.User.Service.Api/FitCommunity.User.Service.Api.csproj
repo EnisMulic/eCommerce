@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FitCommunity.User.Service.Database\FitCommunity.User.Service.Database.csproj" />
+    <ProjectReference Include="..\FitCommunity.User.Service.Services\FitCommunity.User.Service.Services.csproj" />
   </ItemGroup>
 
 

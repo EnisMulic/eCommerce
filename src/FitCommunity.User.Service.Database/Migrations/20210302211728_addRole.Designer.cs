@@ -3,15 +3,17 @@ using System;
 using FitCommunity.User.Service.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FitCommunity.User.Service.Database.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20210302211728_addRole")]
+    partial class addRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
