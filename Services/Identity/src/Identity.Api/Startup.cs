@@ -61,6 +61,13 @@ namespace Identity.Api
                 })
                 .AddDeveloperSigningCredential();
 
+            services.AddCors(options =>
+                options.AddDefaultPolicy(builder =>
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                )
+            );
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
