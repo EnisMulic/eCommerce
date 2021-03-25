@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/product-api.yml
+      - Services/Product/**
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - .github/workflows/product-api.yml
+      - Services/Product/**
+  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+    - run: dotnet build Services/Product/src/Product.Api

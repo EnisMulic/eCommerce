@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/identity-api.yml
+      - Services/Identity/**
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - .github/workflows/identity-api.yml
+      - Services/Identity/**
+  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+    - run: dotnet build Services/Identity/src/Identity.Api

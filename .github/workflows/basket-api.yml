@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/basket-api.yml
+      - Services/Basket/**
+  pull_request:
+    branches:
+      - '*'
+    paths:
+      - .github/workflows/basket-api.yml
+      - Services/Basket/**
+  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@main
+    - uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+    - run: dotnet build Services/Basket/src/Basket.Api
