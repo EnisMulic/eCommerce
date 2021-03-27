@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Product.Database.Configuration;
 
 namespace Product.Database
 {
     public class ProductDbContext : DbContext
     {
-        public ProductDbContext(DbContextOptions options) : base(options)
+        public ProductDbContext(DbContextOptions<ProductDbContext> options) : base(options)
         {
         }
 
@@ -14,7 +15,7 @@ namespace Product.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
         }
     }
 }
