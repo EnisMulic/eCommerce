@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Product.Database;
@@ -9,9 +10,10 @@ using Product.Database;
 namespace Product.Database.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    partial class ProductDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210329130912_addAttributesAndOptions")]
+    partial class addAttributesAndOptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,10 +50,13 @@ namespace Product.Database.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Product.Domain.Image", b =>
+            modelBuilder.Entity("Product.Domain.Picture", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Uri")
@@ -59,7 +64,9 @@ namespace Product.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Pictures");
                 });
 
             modelBuilder.Entity("Product.Domain.Product", b =>
@@ -71,9 +78,6 @@ namespace Product.Database.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ImageId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -81,8 +85,6 @@ namespace Product.Database.Migrations
                         .HasColumnType("numeric");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ImageId");
 
                     b.ToTable("Products");
                 });
@@ -184,15 +186,10 @@ namespace Product.Database.Migrations
                     b.Property<Guid>("ProductOptionId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ImageId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Value")
                         .HasColumnType("text");
 
                     b.HasKey("ProductId", "ProductOptionId");
-
-                    b.HasIndex("ImageId");
 
                     b.HasIndex("ProductOptionId");
 
@@ -214,15 +211,15 @@ namespace Product.Database.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Product.Domain.Product", b =>
+            modelBuilder.Entity("Product.Domain.Picture", b =>
                 {
-                    b.HasOne("Product.Domain.Image", "Image")
+                    b.HasOne("Product.Domain.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ImageId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Image");
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Product.Domain.ProductAttribute", b =>
@@ -274,12 +271,6 @@ namespace Product.Database.Migrations
 
             modelBuilder.Entity("Product.Domain.ProductOptionCombination", b =>
                 {
-                    b.HasOne("Product.Domain.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Product.Domain.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
@@ -291,8 +282,6 @@ namespace Product.Database.Migrations
                         .HasForeignKey("ProductOptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Image");
 
                     b.Navigation("Product");
 
