@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Product.Database;
+using Product.Services;
+using System;
 
 namespace Product.Api
 {
@@ -39,10 +34,17 @@ namespace Product.Api
             services.AddDbContext<ProductDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IProductAttributeGroupService, ProductAttributeGroupService>();
+
+            services.AddAutoMapper(typeof(Mappings.ProductAttributeGroupProfile));
+
+            services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product.Api", Version = "v1" });
+                c.MapType<Guid>(() => new OpenApiSchema { Type = "string", Format = null });
+                c.DescribeAllParametersInCamelCase();
             });
         }
 
