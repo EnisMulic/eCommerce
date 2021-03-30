@@ -1,12 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Product.Contracts
+﻿namespace Product.Contracts
 {
-    class ApiRoutes
+    public static class ApiRoutes
     {
+        public const string Base = "api";
+
+        public static class ProductAttributeGroup
+        {
+            public const string BaseRoute = Base + "/product-attribute-group";
+            public const string Get = BaseRoute;
+            public const string GetById = BaseRoute + "/{id}";
+            public const string Post = BaseRoute;
+            public const string Put = BaseRoute + "/{id}";
+            public const string Delete = BaseRoute + "/{id}";
+        }
     }
 }

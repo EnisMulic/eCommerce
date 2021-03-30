@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Product.Services
+namespace Product.Core.Interfaces
 {
     public interface IProductAttributeGroupService
     {

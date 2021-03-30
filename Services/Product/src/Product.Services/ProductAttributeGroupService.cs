@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
+using Product.Core.Interfaces;
 using Product.Database;
 using Product.Domain;
 using System;

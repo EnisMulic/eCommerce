@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Product.Contracts;
 using Product.Contracts.Requests;
-using Product.Services;
+using Product.Core.Interfaces;
 using System;
 using System.Threading.Tasks;
 
 namespace Product.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route(ApiRoutes.ProductAttributeGroup.BaseRoute)]
     [ApiController]
     public class ProductAttributeGroupController : ControllerBase
     {
