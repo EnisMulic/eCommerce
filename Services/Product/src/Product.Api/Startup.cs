@@ -1,14 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Product.Core.Interfaces;
-using Product.Database;
-using Product.Services;
-using System;
+using Product.Api.Installers;
 
 namespace Product.Api
 {
@@ -24,31 +19,7 @@ namespace Product.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-                options.AddDefaultPolicy(builder =>
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                )
-            );
-
-            services.AddDbContext<ProductDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddScoped<IProductAttributeGroupService, ProductAttributeGroupService>();
-            services.AddScoped<ICategoryService, CategoryService>();
-
-            services.AddAutoMapper(typeof(Mappings.ProductAttributeGroupProfile));
-            services.AddAutoMapper(typeof(Mappings.CategoryProfile));
-
-            services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Product.Api", Version = "v1" });
-                c.MapType<Guid>(() => new OpenApiSchema { Type = "string", Format = null });
-                c.DescribeAllParametersInCamelCase();
-            });
+            services.InstallServicesInAssembly(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
