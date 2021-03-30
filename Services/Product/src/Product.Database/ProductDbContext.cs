@@ -19,6 +19,7 @@ namespace Product.Database
         public DbSet<Domain.ProductOption> ProductOptions { get; set; }
         public DbSet<Domain.ProductOptionCombination> ProductOptionCombinations { get; set; }
         public DbSet<Domain.ProductAttributeValue> ProductAttributeValue { get; set; }
+        public DbSet<Domain.ProductOptionValue> ProductOptionValues { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
