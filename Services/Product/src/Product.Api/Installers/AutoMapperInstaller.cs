@@ -8,6 +8,7 @@ namespace Product.Api.Installers
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddAutoMapper(typeof(Mappings.ProductAttributeGroupProfile));
+            services.AddAutoMapper(typeof(Mappings.ProductOptionProfile));
             services.AddAutoMapper(typeof(Mappings.CategoryProfile));
         }
     }

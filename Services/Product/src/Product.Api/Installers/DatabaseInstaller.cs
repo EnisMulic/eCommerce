@@ -15,6 +15,9 @@ namespace Product.Api.Installers
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IProductAttributeGroupService, ProductAttributeGroupService>();
+
+            services.AddScoped<IProductOptionsService, ProductOptionService>();
+
             services.AddScoped<ICategoryService, CategoryService>();
         }
     }
