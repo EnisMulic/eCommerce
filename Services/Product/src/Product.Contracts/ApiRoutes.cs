@@ -13,5 +13,15 @@
             public const string Put = BaseRoute + "/{id}";
             public const string Delete = BaseRoute + "/{id}";
         }
+
+        public static class Category
+        {
+            public const string BaseRoute = Base + "/category";
+            public const string Get = BaseRoute;
+            public const string GetById = BaseRoute + "/{id}";
+            public const string Post = BaseRoute;
+            public const string Put = BaseRoute + "/{id}";
+            public const string Delete = BaseRoute + "/{id}";
+        }
     }
 }

@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace Product.Api.Controllers
 {
-    [Route(ApiRoutes.ProductAttributeGroup.BaseRoute)]
+    [Route(ApiRoutes.Category.BaseRoute)]
     [ApiController]
-    public class ProductAttributeGroupController : ControllerBase
+    public class CategoryController : ControllerBase
     {
-        private readonly IProductAttributeGroupService _service;
+        private readonly ICategoryService _service;
 
-        public ProductAttributeGroupController(IProductAttributeGroupService service)
+        public CategoryController(ICategoryService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<ProductAttributeGroupResponse>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<CategoryResponse>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAsync()
         {
             var response = await _service.GetAsync();
@@ -33,8 +33,8 @@ namespace Product.Api.Controllers
         public async Task<IActionResult> GetByIdAsync(Guid Id)
         {
             var response = await _service.GetByIdAsync(Id);
-            
-            if(response == null)
+
+            if (response == null)
             {
                 return NotFound();
             }
@@ -44,14 +44,14 @@ namespace Product.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(ProductAttributeGroupUpsertRequest request)
+        public async Task<IActionResult> PostAsync(CategoryUpsertRequest request)
         {
             var response = await _service.InsertAsync(request);
             return Created(nameof(GetByIdAsync), response);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(Guid Id, ProductAttributeGroupUpsertRequest request)
+        public async Task<IActionResult> PutAsync(Guid Id, CategoryUpsertRequest request)
         {
             var response = await _service.UpdateAsync(Id, request);
 
@@ -68,7 +68,7 @@ namespace Product.Api.Controllers
         {
             var response = await _service.DeleteAsync(Id);
 
-            if(response == false)
+            if (response == false)
             {
                 return NoContent();
             }

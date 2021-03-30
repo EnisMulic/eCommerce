@@ -36,8 +36,10 @@ namespace Product.Api
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IProductAttributeGroupService, ProductAttributeGroupService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddAutoMapper(typeof(Mappings.ProductAttributeGroupProfile));
+            services.AddAutoMapper(typeof(Mappings.CategoryProfile));
 
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddControllers();
