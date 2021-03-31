@@ -4,6 +4,16 @@
     {
         public const string Base = "api";
 
+        public static class Product
+        {
+            public const string BaseRoute = Base + "/product";
+            public const string Get = BaseRoute;
+            public const string GetById = BaseRoute + "/{id}";
+            public const string Post = BaseRoute;
+            public const string Put = BaseRoute + "/{id}";
+            public const string Delete = BaseRoute + "/{id}";
+        }
+
         public static class ProductAttributeGroup
         {
             public const string BaseRoute = Base + "/product-attribute-group";

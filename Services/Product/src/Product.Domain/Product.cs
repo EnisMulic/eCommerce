@@ -11,5 +11,8 @@ namespace Product.Domain
         public decimal Price { get; set; }
         public Guid ImageId { get; set; }
         public Image Image { get; set; }
+        public IList<ProductAttributeValue> AttributeValues { get; set; } = new List<ProductAttributeValue>();
+        public IList<ProductOptionValue> OptionValues { get; set; } = new List<ProductOptionValue>();
+        public IList<ProductCategory> Categories { get; set; } = new List<ProductCategory>();
     }
 }
