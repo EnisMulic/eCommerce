@@ -17,7 +17,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] TSearch search)
+        public virtual async Task<IActionResult> Get([FromQuery] TSearch search)
         {
             var response = await _service.GetAsync(search);
 
@@ -30,7 +30,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public virtual async Task<IActionResult> GetById(Guid id)
         {
             var response = await _service.GetByIdAsync(id);
 

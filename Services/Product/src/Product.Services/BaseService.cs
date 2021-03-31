@@ -23,14 +23,14 @@ namespace Product.Services
             _mapper = mapper;
         }
 
-        public async Task<PagedResponse<TModel>> GetAsync(TSearch search = null)
+        public virtual async Task<PagedResponse<TModel>> GetAsync(TSearch search = null)
         {
             var list = await _context.Set<TDatabase>().ToListAsync();
             var response = _mapper.Map<List<TModel>>(list);
             return new PagedResponse<TModel>(response);
         }
 
-        public async Task<TModel> GetByIdAsync(Guid id)
+        public virtual async Task<TModel> GetByIdAsync(Guid id)
         {
             var entity = await _context.Set<TDatabase>().FindAsync(id);
             return _mapper.Map<TModel>(entity);
