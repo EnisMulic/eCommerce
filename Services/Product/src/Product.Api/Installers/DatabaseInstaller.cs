@@ -14,6 +14,8 @@ namespace Product.Api.Installers
             services.AddDbContext<ProductDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddScoped<IImageUploadService, ImageUploadService>();
+
             services.AddScoped<IProductAttributeGroupService, ProductAttributeGroupService>();
 
             services.AddScoped<IProductOptionsService, ProductOptionService>();
