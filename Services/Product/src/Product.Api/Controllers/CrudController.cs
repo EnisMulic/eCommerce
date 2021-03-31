@@ -17,7 +17,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> Insert(TInsert request)
+        public virtual async Task<IActionResult> InsertAsync(TInsert request)
         {
             var response = await _service.InsertAsync(request);
             if (response == null)
@@ -30,7 +30,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public virtual async Task<IActionResult> Update(Guid id, [FromBody] TUpdate request)
+        public virtual async Task<IActionResult> UpdateAsync(Guid id, TUpdate request)
         {
             var response = await _service.UpdateAsync(id, request);
             if (response == null)
@@ -42,7 +42,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public virtual async Task<IActionResult> Delete(Guid id)
+        public virtual async Task<IActionResult> DeleteAsync(Guid id)
         {
             var response = await _service.DeleteAsync(id);
 

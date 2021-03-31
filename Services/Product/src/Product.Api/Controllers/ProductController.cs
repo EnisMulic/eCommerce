@@ -21,21 +21,14 @@ namespace Product.Api.Controllers
         }
 
         [HttpPost]
-        public override async Task<IActionResult> Insert([FromQuery] ProductInsertRequest request)
+        public override async Task<IActionResult> InsertAsync([FromQuery] ProductInsertRequest request)
         {
-            var response = await _service.InsertAsync(request);
-            if (response == null)
-            {
-                return BadRequest();
-            }
-
-            PathString path = HttpContext.Request.Path;
-            return Created(path, response);
+            return await base.InsertAsync(request);
         }
 
-        public override Task<IActionResult> Update(Guid id, [FromQuery] ProductUpdateRequest request)
+        public override async Task<IActionResult> UpdateAsync(Guid id, [FromQuery] ProductUpdateRequest request)
         {
-            return base.Update(id, request);
+            return await base.UpdateAsync(id, request);
         }
     }
 }
