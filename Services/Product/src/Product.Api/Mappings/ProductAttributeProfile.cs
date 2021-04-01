@@ -11,6 +11,7 @@ namespace Product.Api.Mappings
         {
             CreateMap<ProductAttribute, ProductAttributeResponse>();
             CreateMap<ProductAttributeUpsertRequest, ProductAttribute>();
+            CreateMap<ProductAttributeGroup, ProductAttributeResponse.ProductAttributeGroupResponse>();
         }
     }
 }
