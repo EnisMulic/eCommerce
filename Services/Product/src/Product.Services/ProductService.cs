@@ -7,6 +7,7 @@ using Product.Database;
 using Product.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Product.Services
@@ -100,7 +101,7 @@ namespace Product.Services
             }
 
             List<ProductAttributeValue> list = new();
-            foreach(var item in productAttributes)
+            foreach (var item in productAttributes)
             {
                 var attribute = new ProductAttributeValue
                 {
@@ -112,7 +113,7 @@ namespace Product.Services
                 list.Add(attribute);
             }
 
-            if(list.Count > 0)
+            if (list.Count > 0)
             {
                 await _context.AddRangeAsync(list);
                 await _context.SaveChangesAsync();
@@ -121,7 +122,7 @@ namespace Product.Services
             return _mapper.Map<ProductResponse>(entity);
         }
 
-        public async Task<ProductResponse> PatchAttributesAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)
+        public async Task<ProductResponse> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)
         {
             var entity = await _context.Set<Domain.Product>()
                 .Include(i => i.AttributeValues)
@@ -135,7 +136,7 @@ namespace Product.Services
 
             var attributeValueEntity = await _context.Set<ProductAttributeValue>().FindAsync(attributeValueId);
 
-            if(attributeValueEntity == null)
+            if (attributeValueEntity == null)
             {
                 return null;
             }
@@ -143,6 +144,31 @@ namespace Product.Services
             attributeValueEntity.Value = request.Value;
             _context.Set<ProductAttributeValue>().Update(attributeValueEntity);
             await _context.SaveChangesAsync();
+
+            return _mapper.Map<ProductResponse>(entity);
+        }
+
+        public async Task<ProductResponse> DeleteAttributesAsync(Guid id, ProductAttributeValueDeleteRequest request)
+        {
+            var entity = await _context.Set<Domain.Product>()
+                .Include(i => i.AttributeValues)
+                .ThenInclude(i => i.ProductAttribute)
+                .SingleOrDefaultAsync(i => i.Id == id);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            var attributeValues = await _context.Set<ProductAttributeValue>()
+                .Where(i => request.AttributeValueIds.Contains(i.Id))
+                .ToListAsync();
+
+            if (attributeValues.Count > 0)
+            {
+                _context.RemoveRange(attributeValues);
+                await _context.SaveChangesAsync();
+            }
 
             return _mapper.Map<ProductResponse>(entity);
         }

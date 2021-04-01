@@ -10,6 +10,7 @@ namespace Product.Core.Interfaces
         ICrudService<ProductResponse, ProductSearchRequest, ProductInsertRequest, ProductUpdateRequest>
     {
         Task<ProductResponse> AddAttributesAsync(Guid id, List<ProductAttributeValueInsertRequest> productAttributes);
-        Task<ProductResponse> PatchAttributesAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request);
+        Task<ProductResponse> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request);
+        Task<ProductResponse> DeleteAttributesAsync(Guid id, ProductAttributeValueDeleteRequest request);
     }
 }

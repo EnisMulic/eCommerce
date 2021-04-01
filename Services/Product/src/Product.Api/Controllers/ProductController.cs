@@ -72,7 +72,21 @@ namespace Product.Api.Controllers
         [Route(ApiRoutes.Product.PatchAttribute)]
         public async Task<IActionResult> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)
         {
-            var response = await _service.PatchAttributesAsync(id, attributeValueId, request);
+            var response = await _service.PatchAttributeAsync(id, attributeValueId, request);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route(ApiRoutes.Product.DeleteAttribute)]
+        public async Task<IActionResult> DeleteAttributeAsync(Guid id, ProductAttributeValueDeleteRequest request)
+        {
+            var response = await _service.DeleteAttributesAsync(id, request);
 
             if (response == null)
             {
