@@ -20,5 +20,24 @@ namespace Product.Services
         {
            
         }
+
+        public override async Task<PagedResponse<ProductAttributeGroupResponse>> GetAsync(object search = null)
+        {
+            var list = await _context.Set<ProductAttributeGroup>()
+                .Include(i => i.ProductAttributes)
+                .ToListAsync();
+
+            var response = _mapper.Map<List<ProductAttributeGroupResponse>>(list);
+            return new PagedResponse<ProductAttributeGroupResponse>(response);
+        }
+
+        public override async Task<ProductAttributeGroupResponse> GetByIdAsync(Guid id)
+        {
+            var entity = await _context.Set<ProductAttributeGroup>()
+                .Include(i => i.ProductAttributes)
+                .SingleOrDefaultAsync(i => i.Id == id);
+
+            return _mapper.Map<ProductAttributeGroupResponse>(entity);
+        }
     }
 }

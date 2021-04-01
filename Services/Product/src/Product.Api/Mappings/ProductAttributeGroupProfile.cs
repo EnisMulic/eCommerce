@@ -10,6 +10,7 @@ namespace Product.Api.Mappings
         public ProductAttributeGroupProfile()
         {
             CreateMap<ProductAttributeGroup, ProductAttributeGroupResponse>();
+            CreateMap<ProductAttribute, ProductAttributeGroupResponse.ProductAttributeResponse>();
             CreateMap<ProductAttributeGroup, ProductAttributeGroupUpsertRequest>().ReverseMap();
         }
     }
