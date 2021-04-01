@@ -12,6 +12,7 @@
             public const string Post = BaseRoute;
             public const string Put = BaseRoute + "/{id}";
             public const string Delete = BaseRoute + "/{id}";
+            public const string AddAttribute = BaseRoute + "/{id}/product-attribute";
         }
 
         public static class ProductAttributeGroup                              

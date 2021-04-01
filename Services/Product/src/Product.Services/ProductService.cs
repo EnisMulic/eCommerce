@@ -86,5 +86,39 @@ namespace Product.Services
 
             return _mapper.Map<ProductResponse>(entity);
         }
+
+        public async Task<ProductResponse> AddAttributes(Guid id, List<ProductAttributeValueInsertRequest> productAttributes)
+        {
+            var entity = await _context.Set<Domain.Product>()
+                .Include(i => i.AttributeValues)
+                .ThenInclude(i => i.ProductAttribute)
+                .SingleOrDefaultAsync(i => i.Id == id);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            List<ProductAttributeValue> list = new();
+            foreach(var item in productAttributes)
+            {
+                var attribute = new ProductAttributeValue
+                {
+                    ProductId = id,
+                    ProductAttributeId = item.ProductAttributeId,
+                    Value = item.Value
+                };
+
+                list.Add(attribute);
+            }
+
+            if(list.Count > 0)
+            {
+                await _context.AddRangeAsync(list);
+                await _context.SaveChangesAsync();
+            }
+
+            return _mapper.Map<ProductResponse>(entity);
+        }
     }
 }

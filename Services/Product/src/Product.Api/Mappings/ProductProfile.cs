@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
+using Product.Domain;
 
 namespace Product.Api.Mappings
 {
@@ -13,6 +14,7 @@ namespace Product.Api.Mappings
                 .ForMember(i => i.Image, opt => opt.Ignore());
             CreateMap<ProductUpdateRequest, Domain.Product>()
                 .ForMember(i => i.Image, opt => opt.Ignore());
+            CreateMap<ProductAttributeValue, ProductAttributeValueResponse>();
         }
     }
 }

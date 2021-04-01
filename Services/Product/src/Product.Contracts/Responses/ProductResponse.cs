@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Product.Contracts.Responses
 {
@@ -10,5 +11,6 @@ namespace Product.Contracts.Responses
         public decimal Price { get; set; }
         public Guid ImageId { get; set; }
         public ImageResponse Image { get; set; }
+        public List<ProductAttributeValueResponse> AttributeValues { get; set; }
     }
 }
