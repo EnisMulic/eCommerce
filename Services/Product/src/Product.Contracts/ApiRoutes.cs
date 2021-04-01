@@ -14,9 +14,19 @@
             public const string Delete = BaseRoute + "/{id}";
         }
 
-        public static class ProductAttributeGroup
+        public static class ProductAttributeGroup                              
+        {                                                                      
+            public const string BaseRoute = Base + "/product-attribute-group"; 
+            public const string Get = BaseRoute;                               
+            public const string GetById = BaseRoute + "/{id}";                 
+            public const string Post = BaseRoute;                              
+            public const string Put = BaseRoute + "/{id}";                     
+            public const string Delete = BaseRoute + "/{id}";                  
+        }
+
+        public static class ProductAttribute
         {
-            public const string BaseRoute = Base + "/product-attribute-group";
+            public const string BaseRoute = Base + "/product-attribute";
             public const string Get = BaseRoute;
             public const string GetById = BaseRoute + "/{id}";
             public const string Post = BaseRoute;

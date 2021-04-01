@@ -23,6 +23,8 @@ namespace Product.Api.Installers
             services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IProductAttributeService, ProductAttributeService>();
         }
     }
 }

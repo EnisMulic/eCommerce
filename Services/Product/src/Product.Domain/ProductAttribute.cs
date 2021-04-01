@@ -6,7 +6,7 @@ namespace Product.Domain
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public Guid AttributeGroupId { get; set; }
+        public Guid ProductAttributeGroupId { get; set; }
         public ProductAttributeGroup ProductAttributeGroup { get; set; }
     }
 }
