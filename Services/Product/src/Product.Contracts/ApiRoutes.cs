@@ -13,6 +13,7 @@
             public const string Put = BaseRoute + "/{id}";
             public const string Delete = BaseRoute + "/{id}";
             public const string AddAttribute = BaseRoute + "/{id}/product-attribute";
+            public const string PatchAttribute = BaseRoute + "/{id}/product-attribute/{attributeValueId}";
         }
 
         public static class ProductAttributeGroup                              

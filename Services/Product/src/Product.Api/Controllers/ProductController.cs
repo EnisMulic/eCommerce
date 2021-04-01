@@ -58,9 +58,23 @@ namespace Product.Api.Controllers
         [Route(ApiRoutes.Product.AddAttribute)]
         public async Task<IActionResult> AddAttributeAsync(Guid id, List<ProductAttributeValueInsertRequest> request)
         {
-            var response = await _service.AddAttributes(id, request);
+            var response = await _service.AddAttributesAsync(id, request);
 
             if(response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPatch]
+        [Route(ApiRoutes.Product.PatchAttribute)]
+        public async Task<IActionResult> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)
+        {
+            var response = await _service.PatchAttributesAsync(id, attributeValueId, request);
+
+            if (response == null)
             {
                 return NotFound();
             }

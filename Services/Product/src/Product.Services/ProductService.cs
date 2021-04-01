@@ -87,7 +87,7 @@ namespace Product.Services
             return _mapper.Map<ProductResponse>(entity);
         }
 
-        public async Task<ProductResponse> AddAttributes(Guid id, List<ProductAttributeValueInsertRequest> productAttributes)
+        public async Task<ProductResponse> AddAttributesAsync(Guid id, List<ProductAttributeValueInsertRequest> productAttributes)
         {
             var entity = await _context.Set<Domain.Product>()
                 .Include(i => i.AttributeValues)
@@ -117,6 +117,32 @@ namespace Product.Services
                 await _context.AddRangeAsync(list);
                 await _context.SaveChangesAsync();
             }
+
+            return _mapper.Map<ProductResponse>(entity);
+        }
+
+        public async Task<ProductResponse> PatchAttributesAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)
+        {
+            var entity = await _context.Set<Domain.Product>()
+                .Include(i => i.AttributeValues)
+                .ThenInclude(i => i.ProductAttribute)
+                .SingleOrDefaultAsync(i => i.Id == id);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            var attributeValueEntity = await _context.Set<ProductAttributeValue>().FindAsync(attributeValueId);
+
+            if(attributeValueEntity == null)
+            {
+                return null;
+            }
+
+            attributeValueEntity.Value = request.Value;
+            _context.Set<ProductAttributeValue>().Update(attributeValueEntity);
+            await _context.SaveChangesAsync();
 
             return _mapper.Map<ProductResponse>(entity);
         }

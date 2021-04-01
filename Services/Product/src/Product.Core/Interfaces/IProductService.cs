@@ -9,6 +9,7 @@ namespace Product.Core.Interfaces
     public interface IProductService : 
         ICrudService<ProductResponse, ProductSearchRequest, ProductInsertRequest, ProductUpdateRequest>
     {
-        Task<ProductResponse> AddAttributes(Guid id, List<ProductAttributeValueInsertRequest> productAttributes);
+        Task<ProductResponse> AddAttributesAsync(Guid id, List<ProductAttributeValueInsertRequest> productAttributes);
+        Task<ProductResponse> PatchAttributesAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request);
     }
 }
