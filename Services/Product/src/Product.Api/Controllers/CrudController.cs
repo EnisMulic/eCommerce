@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Product.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class CrudController<T, TSearch, TInsert, TUpdate> : BaseController<T, TSearch>
     {

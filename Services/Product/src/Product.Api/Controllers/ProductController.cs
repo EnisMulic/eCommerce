@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Product.Contracts;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
@@ -20,6 +19,20 @@ namespace Product.Api.Controllers
             _service = service;
         }
 
+        [HttpGet]
+        [Route(ApiRoutes.Product.Get)]
+        public override Task<IActionResult> GetAsync([FromQuery] ProductSearchRequest search)
+        {
+            return base.GetAsync(search);
+        }
+
+        [HttpGet]
+        [Route(ApiRoutes.Product.GetById)]
+        public override Task<IActionResult> GetByIdAsync(Guid id)
+        {
+            return base.GetByIdAsync(id);
+        }
+
         [HttpPost]
         [Route(ApiRoutes.Product.Post)]
         public override async Task<IActionResult> InsertAsync([FromQuery] ProductInsertRequest request)
@@ -34,8 +47,15 @@ namespace Product.Api.Controllers
             return await base.UpdateAsync(id, request);
         }
 
-        [Route(ApiRoutes.Product.AddAttribute)]
+        [HttpDelete]
+        [Route(ApiRoutes.Product.Delete)]
+        public override Task<IActionResult> DeleteAsync(Guid id)
+        {
+            return base.DeleteAsync(id);
+        }
+
         [HttpPost]
+        [Route(ApiRoutes.Product.AddAttribute)]
         public async Task<IActionResult> AddAttributeAsync(Guid id, List<ProductAttributeValueInsertRequest> request)
         {
             var response = await _service.AddAttributes(id, request);
