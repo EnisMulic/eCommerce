@@ -15,6 +15,7 @@
             public const string AddAttribute = BaseRoute + "/{id}/product-attribute";
             public const string PatchAttribute = BaseRoute + "/{id}/product-attribute/{attributeValueId}";
             public const string DeleteAttribute = BaseRoute + "/{id}/product-attribute";
+            public const string AddCategories = BaseRoute + "/{id}/category";
         }
 
         public static class ProductAttributeGroup                              

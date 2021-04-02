@@ -12,5 +12,6 @@ namespace Product.Core.Interfaces
         Task<ProductResponse> AddAttributesAsync(Guid id, List<ProductAttributeValueInsertRequest> productAttributes);
         Task<ProductResponse> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request);
         Task<ProductResponse> DeleteAttributesAsync(Guid id, ProductAttributeValueDeleteRequest request);
+        Task<ProductResponse> AddCategoriesAsync(Guid id, List<Guid> request);
     }
 }

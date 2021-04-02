@@ -95,5 +95,19 @@ namespace Product.Api.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost]
+        [Route(ApiRoutes.Product.AddCategories)]
+        public async Task<IActionResult> AddCategoriesAsync(Guid id, List<Guid> request)
+        {
+            var response = await _service.AddCategoriesAsync(id, request);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
     }
 }
