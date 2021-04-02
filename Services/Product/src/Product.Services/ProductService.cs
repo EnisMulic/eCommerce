@@ -219,5 +219,46 @@ namespace Product.Services
 
             return _mapper.Map<ProductResponse>(entity);
         }
+
+        public async Task<ProductResponse> DeleteCategoriesAsync(Guid id, List<Guid> request)
+        {
+            var entity = await _context.Set<Domain.Product>()
+                .Include(i => i.Categories)
+                .ThenInclude(i => i.Category)
+                .SingleOrDefaultAsync(i => i.Id == id);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            List<ProductCategory> list = new();
+            foreach (var item in request)
+            {
+                var category = await _context.Set<Category>().FindAsync(item);
+
+                if (category == null)
+                {
+                    return null;
+                }
+
+                ProductCategory productCategory = await _context.Set<ProductCategory>().FindAsync(item, id);
+
+                if (productCategory == null)
+                {
+                    return null;
+                }
+
+                list.Add(productCategory);
+            }
+
+            if (list.Count > 0)
+            {
+                _context.RemoveRange(list);
+                await _context.SaveChangesAsync();
+            }
+
+            return _mapper.Map<ProductResponse>(entity);
+        }
     }
 }

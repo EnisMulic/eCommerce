@@ -109,5 +109,19 @@ namespace Product.Api.Controllers
 
             return Ok(response);
         }
+
+        [HttpDelete]
+        [Route(ApiRoutes.Product.DeleteCategories)]
+        public async Task<IActionResult> DeleteCategoriesAsync(Guid id, List<Guid> request)
+        {
+            var response = await _service.DeleteCategoriesAsync(id, request);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
     }
 }
