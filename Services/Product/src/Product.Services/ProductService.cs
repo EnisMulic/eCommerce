@@ -38,7 +38,6 @@ namespace Product.Services
                 .Include(i => i.Image)
                 .Include(i => i.Categories)
                 .Include(i => i.AttributeValues)
-                .Include(i => i.OptionValues)
                 .SingleOrDefaultAsync(i => i.Id == id);
 
             return _mapper.Map<ProductResponse>(entity);

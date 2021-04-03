@@ -16,17 +16,13 @@ namespace Product.Database
         public DbSet<Domain.ProductAttribute> ProductAttributes { get; set; }
         public DbSet<Domain.ProductAttributeGroup> ProductAttributeGroups { get; set; }
         public DbSet<Domain.ProductAttributeValue> ProductAttributeValues { get; set; }
-        public DbSet<Domain.ProductOption> ProductOptions { get; set; }
-        public DbSet<Domain.ProductOptionCombination> ProductOptionCombinations { get; set; }
         public DbSet<Domain.ProductAttributeValue> ProductAttributeValue { get; set; }
-        public DbSet<Domain.ProductOptionValue> ProductOptionValues { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new ProductCategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new ProductOptionCombinationConfiguration());
         }
     }
 }

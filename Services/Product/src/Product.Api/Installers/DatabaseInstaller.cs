@@ -18,8 +18,6 @@ namespace Product.Api.Installers
 
             services.AddScoped<IProductAttributeGroupService, ProductAttributeGroupService>();
 
-            services.AddScoped<IProductOptionsService, ProductOptionService>();
-
             services.AddScoped<ICategoryService, CategoryService>();
 
             services.AddScoped<IProductService, ProductService>();

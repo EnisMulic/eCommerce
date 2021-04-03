@@ -9,7 +9,6 @@ namespace Product.Api.Installers
         {
             services.AddAutoMapper(typeof(Mappings.ProductAttributeGroupProfile));
             services.AddAutoMapper(typeof(Mappings.ProductAttributeProfile));
-            services.AddAutoMapper(typeof(Mappings.ProductOptionProfile));
             services.AddAutoMapper(typeof(Mappings.CategoryProfile));
             services.AddAutoMapper(typeof(Mappings.ProductProfile));
             services.AddAutoMapper(typeof(Mappings.ImageProfile));
