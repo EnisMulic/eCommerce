@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Product.Api.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +22,12 @@ namespace Product.Api.Installers
                 )
             );
 
-
             services.AddRouting(options => options.LowercaseUrls = true);
+
+            services.AddMvc()
+                .AddFluentValidation(configuration => 
+                    configuration.RegisterValidatorsFromAssemblyContaining<Startup>());
+
             services.AddControllers();
         }
     }
