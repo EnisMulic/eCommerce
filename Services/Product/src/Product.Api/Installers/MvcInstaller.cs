@@ -1,6 +1,8 @@
 ﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Product.Api.Filters;
 
 namespace Product.Api.Installers
 {
@@ -18,9 +20,16 @@ namespace Product.Api.Installers
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
-            services.AddMvc()
-                .AddFluentValidation(configuration => 
-                    configuration.RegisterValidatorsFromAssemblyContaining<Startup>());
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
+            services.AddMvc(options => 
+            {
+                options.Filters.Add<ValidationFilter>();
+            }).AddFluentValidation(configuration => 
+                configuration.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.AddControllers();
         }
