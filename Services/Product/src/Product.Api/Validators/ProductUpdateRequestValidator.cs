@@ -3,9 +3,9 @@ using Product.Contracts.Requests;
 
 namespace Product.Api.Validators
 {
-    public class ProductInsertRequestValidator : AbstractValidator<ProductInsertRequest>
+    public class ProductUpdateRequestValidator : AbstractValidator<ProductUpdateRequest>
     {
-        public ProductInsertRequestValidator()
+        public ProductUpdateRequestValidator()
         {
             RuleFor(i => i.Name)
                 .NotEmpty();
