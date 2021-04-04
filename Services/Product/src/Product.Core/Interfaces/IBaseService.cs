@@ -7,6 +7,6 @@ namespace Product.Core.Interfaces
     public interface IBaseService<T, TSearch>
     {
         public Task<PagedResponse<T>> GetAsync(TSearch search);
-        public Task<T> GetByIdAsync(Guid id);
+        public Task<IResponse> GetByIdAsync(Guid id);
     }
 }

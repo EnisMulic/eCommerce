@@ -2,7 +2,7 @@
 
 namespace Product.Contracts.Responses
 {
-    public class PagedResponse<T>
+    public class PagedResponse<T> : IResponse
     {
         public PagedResponse() { }
         public PagedResponse(IEnumerable<T> response)

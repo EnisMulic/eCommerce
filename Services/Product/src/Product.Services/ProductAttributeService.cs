@@ -29,13 +29,14 @@ namespace Product.Services
             return new PagedResponse<ProductAttributeResponse>(response);
         }
 
-        public override async Task<ProductAttributeResponse> GetByIdAsync(Guid id)
+        public override async Task<IResponse> GetByIdAsync(Guid id)
         {
             var entity = await _context.Set<ProductAttribute>()
                 .Include(i => i.ProductAttributeGroup)
                 .SingleOrDefaultAsync(i => i.Id == id);
 
-            return _mapper.Map<ProductAttributeResponse>(entity);
+            var response = _mapper.Map<ProductAttributeResponse>(entity);
+            return new Response<ProductAttributeResponse>(response);
         }
     }
 }

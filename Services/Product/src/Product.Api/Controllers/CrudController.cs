@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Product.Contracts.Responses;
 using Product.Core.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace Product.Api.Controllers
         {
             var response = await _service.DeleteAsync(id);
 
-            if (response == false)
+            if (response is ErrorResponse)
             {
                 return NoContent();
             }

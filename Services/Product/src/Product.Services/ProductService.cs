@@ -32,7 +32,7 @@ namespace Product.Services
             return new PagedResponse<ProductResponse>(response);
         }
 
-        public override async Task<ProductResponse> GetByIdAsync(Guid id)
+        public override async Task<IResponse> GetByIdAsync(Guid id)
         {
             var entity = await _context.Set<Domain.Product>()
                 .Include(i => i.Image)
@@ -40,10 +40,24 @@ namespace Product.Services
                 .Include(i => i.AttributeValues)
                 .SingleOrDefaultAsync(i => i.Id == id);
 
-            return _mapper.Map<ProductResponse>(entity);
+            if(entity != null)
+            {
+                var errorModel = new ErrorModel()
+                {
+                    Message = "Product does not exist"
+                };
+
+                var errorResponse = new ErrorResponse();
+                errorResponse.Errors.Add(errorModel);
+
+                return errorResponse;
+            }
+
+            var response = _mapper.Map<ProductResponse>(entity);
+            return new Response<ProductResponse>(response);
         }
 
-        public override async Task<ProductResponse> InsertAsync(ProductInsertRequest request)
+        public override async Task<IResponse> InsertAsync(ProductInsertRequest request)
         {
             var uri = await _imageUploadService.UploadAsync(request.Image);
 
@@ -59,10 +73,11 @@ namespace Product.Services
             await _context.Set<Domain.Product>().AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<ProductResponse>(entity);
+            var response = _mapper.Map<ProductResponse>(entity);
+            return new Response<ProductResponse>(response);
         }
 
-        public override async Task<ProductResponse> UpdateAsync(Guid id, ProductUpdateRequest request)
+        public override async Task<IResponse> UpdateAsync(Guid id, ProductUpdateRequest request)
         {
             var entity = await _context.Set<Domain.Product>()
                 .Include(i => i.Image)
@@ -84,10 +99,11 @@ namespace Product.Services
             _context.Set<Domain.Product>().Update(entity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<ProductResponse>(entity);
+            var response = _mapper.Map<ProductResponse>(entity);
+            return new Response<ProductResponse>(response);
         }
 
-        public async Task<ProductResponse> AddAttributesAsync(Guid id, List<ProductAttributeValueInsertRequest> productAttributes)
+        public async Task<IResponse> AddAttributesAsync(Guid id, List<ProductAttributeValueInsertRequest> productAttributes)
         {
             var entity = await _context.Set<Domain.Product>()
                 .Include(i => i.AttributeValues)
@@ -96,7 +112,15 @@ namespace Product.Services
 
             if (entity == null)
             {
-                return null;
+                var errorModel = new ErrorModel()
+                {
+                    Message = $"Product with the id {id} does not exist"
+                };
+
+                var errorResponse = new ErrorResponse();
+                errorResponse.Errors.Add(errorModel);
+
+                return errorResponse;
             }
 
             List<ProductAttributeValue> list = new();
@@ -118,7 +142,8 @@ namespace Product.Services
                 await _context.SaveChangesAsync();
             }
 
-            return _mapper.Map<ProductResponse>(entity);
+            var response = _mapper.Map<ProductResponse>(entity);
+            return new Response<ProductResponse>(response);
         }
 
         public async Task<ProductResponse> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)

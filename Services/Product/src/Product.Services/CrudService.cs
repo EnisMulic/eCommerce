@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Product.Contracts.Responses;
 using Product.Core.Interfaces;
 using Product.Database;
 using Product.Domain;
@@ -16,17 +17,18 @@ namespace Product.Services
         {
         }
 
-        public virtual async Task<TModel> InsertAsync(TInsert request)
+        public virtual async Task<IResponse> InsertAsync(TInsert request)
         {
             var entity = _mapper.Map<TDatabase>(request);
 
             await _context.Set<TDatabase>().AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<TModel>(entity);
+            var response = _mapper.Map<TModel>(entity);
+            return new Response<TModel>(response);
         }
 
-        public virtual async Task<TModel> UpdateAsync(Guid id, TUpdate request)
+        public virtual async Task<IResponse> UpdateAsync(Guid id, TUpdate request)
         {
             var entity = await _context.Set<TDatabase>().FindAsync(id);
 
@@ -40,17 +42,18 @@ namespace Product.Services
             _context.Set<TDatabase>().Update(entity);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<TModel>(entity);
+            var response = _mapper.Map<TModel>(entity);
+            return new Response<TModel>(response);
         }
 
-        public virtual async Task<bool> DeleteAsync(Guid id)
+        public virtual async Task<IResponse> DeleteAsync(Guid id)
         {
             var entity = await _context.Set<TDatabase>().FindAsync(id);
 
             _context.Set<TDatabase>().Remove(entity);
             var result = await _context.SaveChangesAsync();
 
-            return result != 0;
+            return new Response<bool>(result != 0);
         }
     }
 }

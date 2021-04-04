@@ -30,10 +30,12 @@ namespace Product.Services
             return new PagedResponse<TModel>(response);
         }
 
-        public virtual async Task<TModel> GetByIdAsync(Guid id)
+        public virtual async Task<IResponse> GetByIdAsync(Guid id)
         {
             var entity = await _context.Set<TDatabase>().FindAsync(id);
-            return _mapper.Map<TModel>(entity);
+            var response = _mapper.Map<TModel>(entity);
+
+            return new Response<TModel>(response);
         }
     }
 }

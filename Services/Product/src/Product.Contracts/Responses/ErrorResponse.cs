@@ -2,7 +2,7 @@
 
 namespace Product.Contracts.Responses
 {
-    public class ErrorResponse
+    public class ErrorResponse : IResponse
     {
         public List<ErrorModel> Errors { get; set; } = new();
     }
