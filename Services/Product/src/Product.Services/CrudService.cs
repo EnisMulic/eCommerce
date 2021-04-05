@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Product.Contracts.Responses;
+using Product.Core.Helpers;
 using Product.Core.Interfaces;
 using Product.Database;
 using Product.Domain;
@@ -13,7 +14,8 @@ namespace Product.Services
         where TDatabase : class, IEntity<Guid>
         where TSearch : class
     {
-        public CrudService(ProductDbContext context, IMapper mapper) : base(context, mapper)
+        public CrudService(ProductDbContext context, IMapper mapper, IResponseBuilder<TDatabase> responseBuilder) 
+            : base(context, mapper, responseBuilder)
         {
         }
 

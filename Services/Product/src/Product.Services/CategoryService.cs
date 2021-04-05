@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
+using Product.Core.Helpers;
 using Product.Core.Interfaces;
 using Product.Database;
 using Product.Domain;
@@ -11,7 +12,8 @@ namespace Product.Services
         CrudService<CategoryResponse, object, Category, CategoryUpsertRequest, CategoryUpsertRequest>, 
         ICategoryService
     {
-        public CategoryService(ProductDbContext context, IMapper mapper) : base(context, mapper)
+        public CategoryService(ProductDbContext context, IMapper mapper, IResponseBuilder<Category> responseBuilder) 
+            : base(context, mapper, responseBuilder)
         {
         }
     }

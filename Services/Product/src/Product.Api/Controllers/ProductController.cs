@@ -5,6 +5,7 @@ using Product.Contracts.Responses;
 using Product.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Product.Api.Controllers
@@ -21,9 +22,9 @@ namespace Product.Api.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Product.Get)]
-        public override Task<IActionResult> GetAsync([FromQuery] ProductSearchRequest search)
+        public override Task<IActionResult> GetAsync([FromQuery] ProductSearchRequest search, [Required] PaginationQuery pagination)
         {
-            return base.GetAsync(search);
+            return base.GetAsync(search, pagination);
         }
 
         [HttpGet]

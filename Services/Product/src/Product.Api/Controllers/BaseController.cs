@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Product.Contracts.Requests;
 using Product.Core.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -16,9 +17,9 @@ namespace Product.Api.Controllers
         }
 
         [HttpGet]
-        public virtual async Task<IActionResult> GetAsync([FromQuery] TSearch search)
+        public virtual async Task<IActionResult> GetAsync([FromQuery] TSearch search, [FromQuery] PaginationQuery pagination)
         {
-            var response = await _service.GetAsync(search);
+            var response = await _service.GetAsync(search, pagination);
 
             if (response == null)
             {

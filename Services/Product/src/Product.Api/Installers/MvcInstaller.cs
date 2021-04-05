@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Product.Api.Filters;
+using Product.Core.Helpers;
 
 namespace Product.Api.Installers
 {
@@ -32,6 +33,8 @@ namespace Product.Api.Installers
                 configuration.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.AddControllers();
+
+            services.AddScoped(typeof(IResponseBuilder<>), typeof(ResponseBuilder<>));
         }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
+using Product.Core.Helpers;
 using Product.Core.Interfaces;
 using Product.Database;
 using Product.Domain;
@@ -17,44 +18,10 @@ namespace Product.Services
         IProductService
     {
         private readonly IImageUploadService _imageUploadService;
-        public ProductService(IImageUploadService imageUploadService, ProductDbContext context, IMapper mapper) : base(context, mapper)
+        public ProductService(IImageUploadService imageUploadService, ProductDbContext context, IMapper mapper, IResponseBuilder<Domain.Product> responseBuilder) 
+            : base(context, mapper, responseBuilder)
         {
             _imageUploadService = imageUploadService;
-        }
-
-        public override async Task<PagedResponse<ProductResponse>> GetAsync(ProductSearchRequest search = null)
-        {
-            var list = await _context.Set<Domain.Product>()
-                .Include(i => i.Image)
-                .ToListAsync();
-
-            var response = _mapper.Map<List<ProductResponse>>(list);
-            return new PagedResponse<ProductResponse>(response);
-        }
-
-        public override async Task<IResponse> GetByIdAsync(Guid id)
-        {
-            var entity = await _context.Set<Domain.Product>()
-                .Include(i => i.Image)
-                .Include(i => i.Categories)
-                .Include(i => i.AttributeValues)
-                .SingleOrDefaultAsync(i => i.Id == id);
-
-            if(entity != null)
-            {
-                var errorModel = new ErrorModel()
-                {
-                    Message = "Product does not exist"
-                };
-
-                var errorResponse = new ErrorResponse();
-                errorResponse.Errors.Add(errorModel);
-
-                return errorResponse;
-            }
-
-            var response = _mapper.Map<ProductResponse>(entity);
-            return new Response<ProductResponse>(response);
         }
 
         public override async Task<IResponse> InsertAsync(ProductInsertRequest request)
@@ -105,16 +72,18 @@ namespace Product.Services
 
         public async Task<IResponse> AddAttributesAsync(Guid id, List<ProductAttributeValueInsertRequest> productAttributes)
         {
-            var entity = await _context.Set<Domain.Product>()
-                .Include(i => i.AttributeValues)
-                .ThenInclude(i => i.ProductAttribute)
-                .SingleOrDefaultAsync(i => i.Id == id);
+            var query = _context.Set<Domain.Product>().AsQueryable();
+            query = ApplyIncludes(query);
+            query = ApplyExpression(query, i => i.Id == id);
+            query = query.AsNoTracking();
+
+            var entity = await query.SingleOrDefaultAsync();
 
             if (entity == null)
             {
                 var errorModel = new ErrorModel()
                 {
-                    Message = $"Product with the id {id} does not exist"
+                    Message = $"Product with the id '{id}' does not exist"
                 };
 
                 var errorResponse = new ErrorResponse();
@@ -148,10 +117,12 @@ namespace Product.Services
 
         public async Task<ProductResponse> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)
         {
-            var entity = await _context.Set<Domain.Product>()
-                .Include(i => i.AttributeValues)
-                .ThenInclude(i => i.ProductAttribute)
-                .SingleOrDefaultAsync(i => i.Id == id);
+            var query = _context.Set<Domain.Product>().AsQueryable();
+            query = ApplyIncludes(query);
+            query = ApplyExpression(query, i => i.Id == id);
+            query = query.AsNoTracking();
+
+            var entity = await query.SingleOrDefaultAsync();
 
             if (entity == null)
             {
@@ -174,10 +145,12 @@ namespace Product.Services
 
         public async Task<ProductResponse> DeleteAttributesAsync(Guid id, ProductAttributeValueDeleteRequest request)
         {
-            var entity = await _context.Set<Domain.Product>()
-                .Include(i => i.AttributeValues)
-                .ThenInclude(i => i.ProductAttribute)
-                .SingleOrDefaultAsync(i => i.Id == id);
+            var query = _context.Set<Domain.Product>().AsQueryable();
+            query = ApplyIncludes(query);
+            query = ApplyExpression(query, i => i.Id == id);
+            query = query.AsNoTracking();
+
+            var entity = await query.SingleOrDefaultAsync();
 
             if (entity == null)
             {
@@ -199,10 +172,12 @@ namespace Product.Services
 
         public async Task<ProductResponse> AddCategoriesAsync(Guid id, List<Guid> request)
         {
-            var entity = await _context.Set<Domain.Product>()
-                .Include(i => i.Categories)
-                .ThenInclude(i => i.Category)
-                .SingleOrDefaultAsync(i => i.Id == id);
+            var query = _context.Set<Domain.Product>().AsQueryable();
+            query = ApplyIncludes(query);
+            query = ApplyExpression(query, i => i.Id == id);
+            query = query.AsNoTracking();
+
+            var entity = await query.SingleOrDefaultAsync();
 
             if (entity == null)
             {
@@ -246,10 +221,12 @@ namespace Product.Services
 
         public async Task<ProductResponse> DeleteCategoriesAsync(Guid id, List<Guid> request)
         {
-            var entity = await _context.Set<Domain.Product>()
-                .Include(i => i.Categories)
-                .ThenInclude(i => i.Category)
-                .SingleOrDefaultAsync(i => i.Id == id);
+            var query = _context.Set<Domain.Product>().AsQueryable();
+            query = ApplyIncludes(query);
+            query = ApplyExpression(query, i => i.Id == id);
+            query = query.AsNoTracking();
+
+            var entity = await query.SingleOrDefaultAsync();
 
             if (entity == null)
             {
@@ -283,6 +260,16 @@ namespace Product.Services
             }
 
             return _mapper.Map<ProductResponse>(entity);
+        }
+
+        protected override IQueryable<Domain.Product> ApplyIncludes(IQueryable<Domain.Product> query)
+        {
+            return query
+                .Include(i => i.Image)
+                .Include(i => i.Categories)
+                    .ThenInclude(i => i.Category)
+                .Include(i => i.AttributeValues)
+                    .ThenInclude(i => i.ProductAttribute);
         }
     }
 }

@@ -2,11 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
+using Product.Core.Helpers;
 using Product.Core.Interfaces;
 using Product.Database;
 using Product.Domain;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Product.Services
@@ -16,29 +17,15 @@ namespace Product.Services
         IProductAttributeGroupService
     {
 
-        public ProductAttributeGroupService(ProductDbContext context, IMapper mapper) : base(context, mapper)
+        public ProductAttributeGroupService(ProductDbContext context, IMapper mapper, IResponseBuilder<ProductAttributeGroup> responseBuilder) 
+            : base(context, mapper, responseBuilder)
         {
            
         }
 
-        public override async Task<PagedResponse<ProductAttributeGroupResponse>> GetAsync(object search = null)
+        protected override IQueryable<ProductAttributeGroup> ApplyIncludes(IQueryable<ProductAttributeGroup> query)
         {
-            var list = await _context.Set<ProductAttributeGroup>()
-                .Include(i => i.ProductAttributes)
-                .ToListAsync();
-
-            var response = _mapper.Map<List<ProductAttributeGroupResponse>>(list);
-            return new PagedResponse<ProductAttributeGroupResponse>(response);
-        }
-
-        public override async Task<IResponse> GetByIdAsync(Guid id)
-        {
-            var entity = await _context.Set<ProductAttributeGroup>()
-                .Include(i => i.ProductAttributes)
-                .SingleOrDefaultAsync(i => i.Id == id);
-
-            var response = _mapper.Map<ProductAttributeGroupResponse>(entity);
-            return new Response<ProductAttributeGroupResponse>(response);
+            return query.Include(i => i.ProductAttributes);
         }
     }
 }
