@@ -33,6 +33,7 @@ namespace Product.Services
         {
             var query = _context.Set<TDatabase>().AsQueryable();
 
+            query = ApplyFilter(query, search);
             query = ApplyIncludes(query);
             query = query.AsNoTracking();
 
@@ -72,6 +73,11 @@ namespace Product.Services
                 return query.Where(expression);
             }
 
+            return query;
+        }
+
+        protected virtual IQueryable<TDatabase> ApplyFilter(IQueryable<TDatabase> query, TSearch search)
+        {
             return query;
         }
 

@@ -3,8 +3,7 @@
     public class ProductSearchRequest
     {
         public string Name { get; set; }
-        public string Description { get; set; }
-        public decimal PriceRangeBottom { get; set; }
-        public decimal PriceRangeTop { get; set; }
+        public decimal PriceRangeBottom { get; set; } = 0;
+        public decimal PriceRangeTop { get; set; } = 9999;
     }
 }

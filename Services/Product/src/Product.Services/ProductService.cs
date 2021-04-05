@@ -271,5 +271,18 @@ namespace Product.Services
                 .Include(i => i.AttributeValues)
                     .ThenInclude(i => i.ProductAttribute);
         }
+
+        protected override IQueryable<Domain.Product> ApplyFilter(IQueryable<Domain.Product> query, ProductSearchRequest search)
+        {
+            if(!string.IsNullOrEmpty(search.Name))
+            {
+                query = query.Where(i => i.Name.Contains(search.Name));
+            }
+
+            query = query.Where(i => i.Price > search.PriceRangeBottom);
+            query = query.Where(i => i.Price < search.PriceRangeTop);
+
+            return query;
+        }
     }
 }

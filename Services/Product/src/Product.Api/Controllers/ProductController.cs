@@ -22,7 +22,7 @@ namespace Product.Api.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Product.Get)]
-        public override Task<IActionResult> GetAsync([FromQuery] ProductSearchRequest search, [Required] PaginationQuery pagination)
+        public override Task<IActionResult> GetAsync([FromQuery] ProductSearchRequest search, PaginationQuery pagination)
         {
             return base.GetAsync(search, pagination);
         }
