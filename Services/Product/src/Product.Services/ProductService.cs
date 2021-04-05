@@ -8,7 +8,9 @@ using Product.Database;
 using Product.Domain;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Product.Services
@@ -283,6 +285,35 @@ namespace Product.Services
             query = query.Where(i => i.Price < search.PriceRangeTop);
 
             return query;
+        }
+
+        protected override IQueryable<Domain.Product> ApplySorting(IQueryable<Domain.Product> query, SortQuery sort)
+        {
+            if(string.IsNullOrEmpty(sort.OrderBy))
+            {
+                return query;
+            }
+
+            Expression<Func<Domain.Product, object>> expression = null;
+
+            switch (CultureInfo.CurrentCulture.TextInfo.ToTitleCase(sort.OrderBy))
+            {
+                case nameof(Domain.Product.Name):
+                    expression = i => i.Name;
+                    break;
+                case nameof(Domain.Product.Price):
+                    expression = i => i.Price;
+                    break;
+            }
+
+            if(expression == null)
+            {
+                return query;
+            }
+
+            return sort.SortOrder == SortOrder.DESC
+                ? query.OrderByDescending(expression)
+                : query.OrderBy(expression);
         }
     }
 }

@@ -17,9 +17,9 @@ namespace Product.Api.Controllers
         }
 
         [HttpGet]
-        public virtual async Task<IActionResult> GetAsync([FromQuery] TSearch search, [FromQuery] PaginationQuery pagination)
+        public virtual async Task<IActionResult> GetAsync([FromQuery] TSearch search, [FromQuery] PaginationQuery pagination, [FromQuery] SortQuery sort)
         {
-            var response = await _service.GetAsync(search, pagination);
+            var response = await _service.GetAsync(search, pagination, sort);
 
             if (response == null)
             {

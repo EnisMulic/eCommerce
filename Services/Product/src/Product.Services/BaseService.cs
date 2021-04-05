@@ -29,12 +29,13 @@ namespace Product.Services
             _responseBuilder = responseBuilder;
         }
 
-        public virtual async Task<IResponse> GetAsync(TSearch search = null, PaginationQuery pagination = null)
+        public virtual async Task<IResponse> GetAsync(TSearch search, PaginationQuery pagination, SortQuery sort)
         {
             var query = _context.Set<TDatabase>().AsQueryable();
 
             query = ApplyFilter(query, search);
             query = ApplyIncludes(query);
+            query = ApplySorting(query, sort);
             query = query.AsNoTracking();
 
             if (pagination == null || pagination.PageNumber < 1 || pagination.PageSize < 1)
@@ -82,6 +83,11 @@ namespace Product.Services
         }
 
         protected virtual IQueryable<TDatabase> ApplyIncludes(IQueryable<TDatabase> query)
+        {
+            return query;
+        }
+
+        protected virtual IQueryable<TDatabase> ApplySorting(IQueryable<TDatabase> query, SortQuery sort)
         {
             return query;
         }
