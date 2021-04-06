@@ -61,6 +61,15 @@ namespace Identity.Api
                 })
                 .AddDeveloperSigningCredential();
 
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = "https://localhost:44368/";
+                    options.RequireHttpsMetadata = false;
+
+                    options.ApiName = "api1";
+                });
+
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
                     builder.AllowAnyOrigin()
@@ -93,6 +102,7 @@ namespace Identity.Api
             app.UseRouting();
             app.UseIdentityServer();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

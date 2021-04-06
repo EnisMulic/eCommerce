@@ -1,8 +1,7 @@
+@using Identity.Api.ViewModels
 @using System.Diagnostics
 
-@{
-    var version = FileVersionInfo.GetVersionInfo(typeof(IdentityServer4.Hosting.IdentityServerMiddleware).Assembly.Location).ProductVersion.Split('+').First();
-}
+@{ var version = FileVersionInfo.GetVersionInfo(typeof(IdentityServer4.Hosting.IdentityServerMiddleware).Assembly.Location).ProductVersion.Split('+').First(); }
 
 <div class="welcome-page">
     <h1>
