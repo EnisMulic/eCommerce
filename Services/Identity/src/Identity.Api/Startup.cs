@@ -69,6 +69,7 @@ namespace Identity.Api
                 )
             );
 
+            services.AddControllers();
             services.AddControllersWithViews();
             services.AddSwaggerGen(c =>
             {
