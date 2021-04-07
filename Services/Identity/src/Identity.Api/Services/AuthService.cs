@@ -27,6 +27,11 @@ namespace Identity.Api.Services
             return _signInManager.SignInAsync(user, properties, authenticationMethod);
         }
 
+        public async Task<IdentityResult> SignUpAsync(ApplicationUser user, string password)
+        {
+            return await _userManager.CreateAsync(user, password);
+        }
+
         public async Task<bool> ValidateCredentialsAsync(ApplicationUser user, string password)
         {
             return await _userManager.CheckPasswordAsync(user, password);
