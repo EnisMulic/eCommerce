@@ -4,13 +4,11 @@
 
 using IdentityModel;
 using IdentityServer4;
-using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Test;
-using Identity.Api.Quickstart.UI;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +19,12 @@ using System.Threading.Tasks;
 using Identity.Api.Attributes;
 using Identity.Api.ViewModels;
 using Identity.Api.Extensions;
+using Identity.Api.Models;
+using Identity.Api.Services;
+using Identity.Api.Settings;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace Identity.Api.Controllers
 {
@@ -33,27 +37,28 @@ namespace Identity.Api.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly TestUserStore _users;
+        private readonly IAuthService<ApplicationUser> _authService;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
-        private readonly IEventService _events;
+        private readonly ILogger<AccountController> _logger;
+        private readonly JwtSettings _jwtSettings;
 
         public AccountController(
+            IAuthService<ApplicationUser> authService,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
-            IEventService events,
+            ILogger<AccountController> logger,
+            JwtSettings jwtSettings,
             TestUserStore users = null)
         {
-            // if the TestUserStore is not in DI, then we'll just use the global users collection
-            // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            _users = users ?? new TestUserStore(TestUsers.Users);
-
+            _authService = authService;
             _interaction = interaction;
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
-            _events = events;
+            _logger = logger;
+            _jwtSettings = jwtSettings;
         }
 
         /// <summary>
@@ -113,63 +118,40 @@ namespace Identity.Api.Controllers
 
             if (ModelState.IsValid)
             {
-                // validate username/password against in-memory store
-                if (_users.ValidateCredentials(model.Username, model.Password))
+                var user = await _authService.FindByUsernameAsync(model.Username);
+
+                if (await _authService.ValidateCredentialsAsync(user, model.Password))
                 {
-                    var user = _users.FindByUsername(model.Username);
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username, clientId: context?.Client.ClientId));
 
-                    // only set explicit expiration here if user chooses "remember me". 
-                    // otherwise we rely upon expiration configured in cookie middleware.
-                    AuthenticationProperties props = null;
-                    if (AccountOptions.AllowRememberLogin && model.RememberLogin)
+                    var tokenLifetime = _jwtSettings.TokenLifetimeMinutes;
+
+                    var props = new AuthenticationProperties
                     {
-                        props = new AuthenticationProperties
-                        {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
-                        };
+                        ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(tokenLifetime),
+                        AllowRefresh = true,
+                        RedirectUri = model.ReturnUrl
                     };
 
-                    // issue authentication cookie with subject ID and username
-                    var isuser = new IdentityServerUser(user.SubjectId)
+                    if (model.RememberLogin)
                     {
-                        DisplayName = user.Username
+                        var permanentTokenLifetime = _jwtSettings.PermanentTokenLifetimeDays;
+
+                        props.ExpiresUtc = DateTimeOffset.UtcNow.AddDays(permanentTokenLifetime);
+                        props.IsPersistent = true;
                     };
 
-                    await HttpContext.SignInAsync(isuser, props);
+                    await _authService.SignInAsync(user, props);
 
-                    if (context != null)
+                    // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
+                    if (_interaction.IsValidReturnUrl(model.ReturnUrl))
                     {
-                        if (context.IsNativeClient())
-                        {
-                            // The client is native, so this change in how to
-                            // return the response is for better UX for the end user.
-                            return this.LoadingPage("Redirect", model.ReturnUrl);
-                        }
-
-                        // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
                         return Redirect(model.ReturnUrl);
                     }
 
-                    // request for a local page
-                    if (Url.IsLocalUrl(model.ReturnUrl))
-                    {
-                        return Redirect(model.ReturnUrl);
-                    }
-                    else if (string.IsNullOrEmpty(model.ReturnUrl))
-                    {
-                        return Redirect("~/");
-                    }
-                    else
-                    {
-                        // user might have clicked on a malicious link - should be logged
-                        throw new Exception("invalid return URL");
-                    }
+                    return Redirect("~/");
                 }
 
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.Client.ClientId));
-                ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                ModelState.AddModelError("", "Invalid username or password.");
             }
 
             // something went wrong, show form with error
@@ -184,16 +166,26 @@ namespace Identity.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout(string logoutId)
         {
-            // build a model so the logout page knows what to display
-            var vm = await BuildLogoutViewModelAsync(logoutId);
-
-            if (vm.ShowLogoutPrompt == false)
+            if (User.Identity.IsAuthenticated == false)
             {
-                // if the request for logout was properly authenticated from IdentityServer, then
-                // we don't need to show the prompt and can just log the user out directly.
-                return await Logout(vm);
+                // if the user is not authenticated, then just show logged out page
+                return await Logout(new LogoutViewModel { LogoutId = logoutId });
             }
 
+            //Test for Xamarin. 
+            var context = await _interaction.GetLogoutContextAsync(logoutId);
+            if (context?.ShowSignoutPrompt == false)
+            {
+                //it's safe to automatically sign-out
+                return await Logout(new LogoutViewModel { LogoutId = logoutId });
+            }
+
+            // show the logout prompt. this prevents attacks where the user
+            // is automatically signed out by another malicious web page.
+            var vm = new LogoutViewModel
+            {
+                LogoutId = logoutId
+            };
             return View(vm);
         }
 
@@ -204,31 +196,49 @@ namespace Identity.Api.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(LogoutInputModel model)
         {
-            // build a model so the logged out page knows what to display
-            var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
+            var idp = User?.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
 
-            if (User?.Identity.IsAuthenticated == true)
+            if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
             {
-                // delete local authentication cookie
-                await HttpContext.SignOutAsync();
+                if (model.LogoutId == null)
+                {
+                    // if there's no current logout context, we need to create one
+                    // this captures necessary info from the current logged in user
+                    // before we signout and redirect away to the external IdP for signout
+                    model.LogoutId = await _interaction.CreateLogoutContextAsync();
+                }
 
-                // raise the logout event
-                await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+                string url = "/Account/Logout?logoutId=" + model.LogoutId;
+
+                try
+                {
+
+                    // hack: try/catch to handle social providers that throw
+                    await HttpContext.SignOutAsync(idp, new AuthenticationProperties
+                    {
+                        RedirectUri = url
+                    });
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "LOGOUT ERROR: {ExceptionMessage}", ex.Message);
+                }
             }
 
-            // check if we need to trigger sign-out at an upstream identity provider
-            if (vm.TriggerExternalSignout)
-            {
-                // build a return URL so the upstream provider will redirect back
-                // to us after the user has logged out. this allows us to then
-                // complete our single sign-out processing.
-                string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
+            // delete authentication cookie
+            await HttpContext.SignOutAsync();
 
-                // this triggers a redirect to the external provider for sign-out
-                return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
-            }
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
 
-            return View("LoggedOut", vm);
+            // set this so UI rendering sees an anonymous user
+            HttpContext.User = new ClaimsPrincipal(new ClaimsIdentity());
+
+            // get context information (client name, post logout redirect URI and iframe for federated signout)
+            var logout = await _interaction.GetLogoutContextAsync(model.LogoutId);
+
+            var redirectUri = logout?.PostLogoutRedirectUri ?? "~/";
+
+            return Redirect(redirectUri);
         }
 
         [HttpGet]

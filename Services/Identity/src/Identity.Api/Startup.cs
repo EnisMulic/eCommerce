@@ -1,22 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Identity.Api.Database;
 using Identity.Api.Models;
-using IdentityServer4.Models;
-using IdentityServer4.Test;
+using Identity.Api.Services;
+using Identity.Api.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace Identity.Api
@@ -43,7 +36,8 @@ namespace Identity.Api
             ));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddIdentityServer()
                 .AddAspNetIdentity<ApplicationUser>()
@@ -77,6 +71,14 @@ namespace Identity.Api
                         .AllowAnyHeader()
                 )
             );
+
+            services.AddTransient<IAuthService<ApplicationUser>, AuthService>();
+
+            var jwtSettings = Configuration
+                .GetSection(nameof(JwtSettings))
+                .Get<JwtSettings>();
+
+            services.AddSingleton(jwtSettings);
 
             services.AddControllers();
             services.AddControllersWithViews();
