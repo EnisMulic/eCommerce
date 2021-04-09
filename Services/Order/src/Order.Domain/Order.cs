@@ -1,11 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Order.Domain
 {
     public class Order : Entity<Guid>, IAggregateRoot
     {
+        private DateTime orderDate;
+        private Guid buyerId;
+        private Guid orderStatusId;
+        private Guid paymentMethodId;
+        private readonly List<OrderItem> orderItems;
+
+        // public OrderStatus OrderStatus { get; private set; }
+        public IReadOnlyCollection<OrderItem> OrderItems => orderItems;
+
         public Order()
         {
+        }
+
+        public Order(DateTime orderDate, Guid buyerId, Guid orderStatusId, Guid paymentMethodId)
+        {
+            this.orderDate = orderDate;
+            this.buyerId = buyerId;
+            this.orderStatusId = orderStatusId;
+            this.paymentMethodId = paymentMethodId;
         }
     }
 }

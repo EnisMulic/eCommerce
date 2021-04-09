@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Order.Database;
@@ -9,9 +10,10 @@ using Order.Database;
 namespace Order.Database.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    partial class OrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210409084812_RemoveDuplicateColumns")]
+    partial class RemoveDuplicateColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,9 +55,9 @@ namespace Order.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("buyerId")
+                    b.Property<Guid?>("OrderStatusId")
                         .HasColumnType("uuid")
-                        .HasColumnName("BuyerId");
+                        .HasColumnName("OrderStatusId1");
 
                     b.Property<DateTime>("orderDate")
                         .HasColumnType("timestamp without time zone")
@@ -71,7 +73,7 @@ namespace Order.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("buyerId");
+                    b.HasIndex("OrderStatusId");
 
                     b.HasIndex("orderStatusId");
 
@@ -172,11 +174,9 @@ namespace Order.Database.Migrations
 
             modelBuilder.Entity("Order.Domain.Order", b =>
                 {
-                    b.HasOne("Order.Domain.Buyer", null)
+                    b.HasOne("Order.Domain.OrderStatus", "OrderStatus")
                         .WithMany()
-                        .HasForeignKey("buyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderStatusId");
 
                     b.HasOne("Order.Domain.OrderStatus", null)
                         .WithMany()
@@ -189,6 +189,8 @@ namespace Order.Database.Migrations
                         .HasForeignKey("paymentMethodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("OrderStatus");
                 });
 
             modelBuilder.Entity("Order.Domain.OrderItem", b =>

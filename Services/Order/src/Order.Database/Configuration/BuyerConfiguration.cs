@@ -8,7 +8,15 @@ namespace Order.Database.Configuration
     {
         public void Configure(EntityTypeBuilder<Buyer> builder)
         {
-            
+            builder.Property(b => b.Name);
+
+            builder.HasMany(i => i.PaymentMethods)
+                .WithOne()
+                .HasForeignKey("BuyerId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Metadata.FindNavigation(nameof(Buyer.PaymentMethods))
+                .SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

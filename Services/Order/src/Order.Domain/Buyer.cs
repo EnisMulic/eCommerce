@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Order.Domain
 {
     public class Buyer : Entity<Guid>, IAggregateRoot
     {
-        public string Name { get; set; }
+        public string Name { get; private set; }
+        private readonly List<PaymentMethod> paymentMethods;
+
+        public IReadOnlyCollection<PaymentMethod> PaymentMethods => paymentMethods;
 
         public Buyer(Guid id, string name)
         {
