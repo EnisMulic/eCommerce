@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Order.Domain
+namespace Order.Domain.Common
 {
     public abstract class Enumeration : IComparable
     {

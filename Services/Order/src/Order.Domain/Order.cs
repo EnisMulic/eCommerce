@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Order.Domain.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Order.Domain
@@ -12,6 +13,7 @@ namespace Order.Domain
         private readonly List<OrderItem> orderItems;
 
         // public OrderStatus OrderStatus { get; private set; }
+        public Address Address { get; private set; }
         public IReadOnlyCollection<OrderItem> OrderItems => orderItems;
 
         public Order()

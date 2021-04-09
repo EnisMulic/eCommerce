@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Order.Domain.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Order.Domain

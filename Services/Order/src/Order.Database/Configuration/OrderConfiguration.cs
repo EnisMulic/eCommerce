@@ -29,6 +29,12 @@ namespace Order.Database.Configuration
                 .HasColumnName("OrderDate")
                 .IsRequired();
 
+            builder.OwnsOne(b => b.Address, a =>
+            {
+                a.Property<Guid>("OrderId");
+                a.WithOwner();
+            });
+
             builder.Metadata.FindNavigation(nameof(Domain.Order.OrderItems))
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 
