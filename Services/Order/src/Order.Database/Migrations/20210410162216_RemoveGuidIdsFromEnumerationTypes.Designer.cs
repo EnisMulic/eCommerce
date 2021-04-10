@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Order.Database;
@@ -9,9 +10,10 @@ using Order.Database;
 namespace Order.Database.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    partial class OrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210410162216_RemoveGuidIdsFromEnumerationTypes")]
+    partial class RemoveGuidIdsFromEnumerationTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,15 +37,8 @@ namespace Order.Database.Migrations
 
             modelBuilder.Entity("Order.Domain.CardType", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
-
-                    b.HasKey("Id");
 
                     b.ToTable("CardTypes");
                 });
@@ -62,10 +57,6 @@ namespace Order.Database.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("OrderDate");
 
-                    b.Property<int>("orderStatusId")
-                        .HasColumnType("integer")
-                        .HasColumnName("OrderStatusId");
-
                     b.Property<Guid>("paymentMethodId")
                         .HasColumnType("uuid")
                         .HasColumnName("PaymentMethodId");
@@ -73,8 +64,6 @@ namespace Order.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("buyerId");
-
-                    b.HasIndex("orderStatusId");
 
                     b.HasIndex("paymentMethodId");
 
@@ -123,15 +112,8 @@ namespace Order.Database.Migrations
 
             modelBuilder.Entity("Order.Domain.OrderStatus", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
-
-                    b.HasKey("Id");
 
                     b.ToTable("OrderStatus");
                 });
@@ -155,10 +137,6 @@ namespace Order.Database.Migrations
                         .HasColumnType("text")
                         .HasColumnName("CardNumber");
 
-                    b.Property<int>("cardTypeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("CardTypeId");
-
                     b.Property<DateTime>("expiration")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("Expiration");
@@ -166,8 +144,6 @@ namespace Order.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BuyerId");
-
-                    b.HasIndex("cardTypeId");
 
                     b.ToTable("PaymentMethods");
                 });
@@ -177,12 +153,6 @@ namespace Order.Database.Migrations
                     b.HasOne("Order.Domain.Buyer", null)
                         .WithMany()
                         .HasForeignKey("buyerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Order.Domain.OrderStatus", null)
-                        .WithMany()
-                        .HasForeignKey("orderStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -239,14 +209,6 @@ namespace Order.Database.Migrations
                         .HasForeignKey("BuyerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Order.Domain.CardType", "CardType")
-                        .WithMany()
-                        .HasForeignKey("cardTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CardType");
                 });
 
             modelBuilder.Entity("Order.Domain.Buyer", b =>

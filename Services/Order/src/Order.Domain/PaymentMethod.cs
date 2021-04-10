@@ -10,14 +10,14 @@ namespace Order.Domain
         private string cardHolderName;
         private DateTime expiration;
 
-        private Guid cardTypeId;
+        private int cardTypeId;
         public CardType CardType { get; private set; }
 
         protected PaymentMethod()
         {
         }
 
-        public PaymentMethod(string cardNumber, string securityNumber, string cardHolderName, DateTime expiration, Guid cardTypeId)
+        public PaymentMethod(string cardNumber, string securityNumber, string cardHolderName, DateTime expiration, int cardTypeId)
         {
             this.cardNumber = cardNumber;
             this.securityNumber = securityNumber;

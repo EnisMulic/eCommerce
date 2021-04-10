@@ -23,6 +23,8 @@ namespace Order.Database
             modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
             modelBuilder.ApplyConfiguration(new BuyerConfiguration());
             modelBuilder.ApplyConfiguration(new PaymentMethodConfiguration());
+            modelBuilder.ApplyConfiguration(new CardTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new OrderStatusConfiguration());
         }
     }
 }

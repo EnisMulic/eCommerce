@@ -8,7 +8,7 @@ namespace Order.Domain
     {
         private DateTime orderDate;
         private Guid buyerId;
-        private Guid orderStatusId;
+        private int orderStatusId;
         private Guid paymentMethodId;
         private readonly List<OrderItem> orderItems;
 
@@ -20,7 +20,7 @@ namespace Order.Domain
         {
         }
 
-        public Order(DateTime orderDate, Guid buyerId, Guid orderStatusId, Guid paymentMethodId)
+        public Order(DateTime orderDate, Guid buyerId, int orderStatusId, Guid paymentMethodId)
         {
             this.orderDate = orderDate;
             this.buyerId = buyerId;

@@ -19,7 +19,7 @@ namespace Order.Database.Configuration
                 .HasColumnName("PaymentMethodId")
                 .IsRequired();
 
-            builder.Property<Guid>("orderStatusId")
+            builder.Property<int>("orderStatusId")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("OrderStatusId")
                 .IsRequired();

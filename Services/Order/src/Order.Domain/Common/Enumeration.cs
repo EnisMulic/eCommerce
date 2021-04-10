@@ -4,10 +4,10 @@ namespace Order.Domain.Common
 {
     public abstract class Enumeration : IComparable
     {
-        public Guid Id { get; private set; }
+        public int Id { get; private set; }
         public string Name { get; private set; }
 
-        protected Enumeration(Guid id, string name)
+        protected Enumeration(int id, string name)
         {
             Id = id;
             Name = name;

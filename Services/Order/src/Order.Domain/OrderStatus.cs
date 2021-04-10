@@ -1,17 +1,16 @@
 ﻿using Order.Domain.Common;
-using System;
 
 namespace Order.Domain
 {
     public class OrderStatus : Enumeration
     {
-        public static OrderStatus Submitted = new(Guid.NewGuid(), nameof(Submitted).ToLowerInvariant());
-        public static OrderStatus AwaitingValidation = new(Guid.NewGuid(), nameof(AwaitingValidation).ToLowerInvariant());
-        public static OrderStatus StockConfirmed = new(Guid.NewGuid(), nameof(StockConfirmed).ToLowerInvariant());
-        public static OrderStatus Paid = new(Guid.NewGuid(), nameof(Paid).ToLowerInvariant());
-        public static OrderStatus Shipped = new(Guid.NewGuid(), nameof(Shipped).ToLowerInvariant());
-        public static OrderStatus Cancelled = new(Guid.NewGuid(), nameof(Cancelled).ToLowerInvariant());
-        public OrderStatus(Guid id, string name) : base(id, name)
+        public static OrderStatus Submitted = new(1, nameof(Submitted).ToLowerInvariant());
+        public static OrderStatus AwaitingValidation = new(2, nameof(AwaitingValidation).ToLowerInvariant());
+        public static OrderStatus StockConfirmed = new(3, nameof(StockConfirmed).ToLowerInvariant());
+        public static OrderStatus Paid = new(4, nameof(Paid).ToLowerInvariant());
+        public static OrderStatus Shipped = new(5, nameof(Shipped).ToLowerInvariant());
+        public static OrderStatus Cancelled = new(6, nameof(Cancelled).ToLowerInvariant());
+        public OrderStatus(int id, string name) : base(id, name)
         {
         }
     }

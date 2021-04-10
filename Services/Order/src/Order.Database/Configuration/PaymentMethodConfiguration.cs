@@ -27,7 +27,7 @@ namespace Order.Database.Configuration
                 .HasColumnName("Expiration")
                 .IsRequired();
 
-            builder.Property<Guid>("cardTypeId")
+            builder.Property<int>("cardTypeId")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("CardTypeId")
                 .IsRequired();
