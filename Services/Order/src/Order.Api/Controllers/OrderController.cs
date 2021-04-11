@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Order.Api.Extensions;
 using Order.Contracts;
 using Order.Contracts.Requests;
+using Order.Core.Commands;
 using Order.Core.Queries;
 using System;
 using System.Threading.Tasks;
@@ -55,21 +56,39 @@ namespace Order.Api.Controllers
         [Route(ApiRoutes.Order.Cancel)]
         public async Task<IActionResult> CancelAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var command = new CancelOrderCommand(id);
+            var response = await _mediator.Send(command);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
         }
 
         [HttpPatch]
         [Route(ApiRoutes.Order.Ship)]
         public async Task<IActionResult> ShipAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var command = new ShipOrderCommand(id);
+            var response = await _mediator.Send(command);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
         }
 
         [HttpGet]
         [Route(ApiRoutes.Order.GetCardTypes)]
         public async Task<IActionResult> GetCardTypesAsync()
         {
-            throw new NotImplementedException();
+            var query = new GetCardTypesQuery();
+            var response = await _mediator.Send(query);
+            return Ok(response);
         }
     }
 }
