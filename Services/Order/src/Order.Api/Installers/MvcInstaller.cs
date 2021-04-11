@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Order.Core.Helpers;
 
 namespace Order.Api.Installers
 {
@@ -16,6 +17,8 @@ namespace Order.Api.Installers
             );
 
             services.AddControllers();
+
+            services.AddScoped(typeof(IResponseBuilder<>), typeof(ResponseBuilder<>));
         }
     }
 }

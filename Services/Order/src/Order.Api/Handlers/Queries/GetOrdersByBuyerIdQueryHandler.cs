@@ -3,26 +3,26 @@ using Order.Contracts.Responses;
 using Order.Core.Helpers;
 using Order.Core.Queries;
 using Order.Database;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Order.Api.Handlers.Queries
 {
-    public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, IResponse>
+    public class GetOrdersByBuyerIdQueryHandler : IRequestHandler<GetOrdersByBuyerIdQuery, IResponse>
     {
         private readonly OrderDbContext _context;
         private readonly IResponseBuilder<Domain.Order> _responseBuilder;
 
-        public GetOrderByIdQueryHandler(OrderDbContext context, IResponseBuilder<Domain.Order> responseBuilder)
+        public GetOrdersByBuyerIdQueryHandler(OrderDbContext context, IResponseBuilder<Domain.Order> responseBuilder)
         {
             _context = context;
             _responseBuilder = responseBuilder;
         }
 
-        public async Task<IResponse> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
+        public Task<IResponse> Handle(GetOrdersByBuyerIdQuery request, CancellationToken cancellationToken)
         {
-            var order = await _context.Set<Domain.Order>().FindAsync(request.Id);
-            return _responseBuilder.Create<OrderResponse>(order);
+            throw new NotImplementedException();
         }
     }
 }

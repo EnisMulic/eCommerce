@@ -2,13 +2,13 @@
 using Order.Contracts.Responses;
 using System;
 
-namespace Order.Core.Queries
+namespace Order.Core.Commands
 {
-    public class GetOrderByIdQuery : IRequest<IResponse>
+    public class ShipOrderCommand : IRequest<IResponse>
     {
         public Guid Id { get; }
 
-        public GetOrderByIdQuery(Guid id)
+        public ShipOrderCommand(Guid id)
         {
             Id = id;
         }
