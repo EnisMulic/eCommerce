@@ -17,20 +17,13 @@ namespace Order.Domain
         {
         }
 
-        public PaymentMethod(int cardTypeId, string cardNumber, string securityNumber, string cardHolderName, DateTime expiration)
+        public PaymentMethod(string cardNumber, string securityNumber, string cardHolderName, DateTime expiration, int cardTypeId)
         {
-            this.cardNumber = !string.IsNullOrWhiteSpace(cardNumber) ? cardNumber : throw new ArgumentException(nameof(cardNumber));
-            this.securityNumber = !string.IsNullOrWhiteSpace(securityNumber) ? securityNumber : throw new ArgumentException(nameof(securityNumber));
-            this.cardHolderName = !string.IsNullOrWhiteSpace(cardHolderName) ? cardHolderName : throw new ArgumentException(nameof(cardHolderName));
-            this.expiration = expiration < DateTime.UtcNow ? expiration : throw new ArgumentException(nameof(expiration));
+            this.cardNumber = cardNumber;
+            this.securityNumber = securityNumber;
+            this.cardHolderName = cardHolderName;
+            this.expiration = expiration;
             this.cardTypeId = cardTypeId;
-        }
-
-        public bool IsEqualTo(int cardTypeId, string cardNumber, DateTime expiration)
-        {
-            return this.cardTypeId == cardTypeId && 
-                   this.cardNumber == cardNumber && 
-                   this.expiration == expiration;
         }
     }
 }
