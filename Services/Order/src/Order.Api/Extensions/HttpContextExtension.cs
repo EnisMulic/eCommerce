@@ -8,12 +8,14 @@ namespace Order.Api.Extensions
     {
         public static Guid GetBuyerId(this HttpContext httpContext)
         {
-            if (httpContext.User == null)
+            var id = httpContext.User.Identity.Name;
+
+            if (string.IsNullOrEmpty(id))
             {
                 return Guid.Empty;
             }
 
-            return new Guid(httpContext.User.Claims.Single(x => x.Type == "id").Value);
+            return new Guid(id);
         }
     }
 }
