@@ -8,6 +8,7 @@ namespace Order.Api.Installers
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddAutoMapper(typeof(Core.Mappings.OrderProfile));
+            services.AddAutoMapper(typeof(Core.Mappings.CardTypeProfile));
         }
     }
 }
