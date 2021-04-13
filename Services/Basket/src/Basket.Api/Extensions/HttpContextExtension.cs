@@ -5,7 +5,7 @@ namespace Basket.Api.Extensions
 {
     public static class HttpContextExtension
     {
-        public static Guid GetBuyerId(this HttpContext httpContext)
+        public static Guid GetCustomerId(this HttpContext httpContext)
         {
             var id = httpContext.User.Identity.Name;
 

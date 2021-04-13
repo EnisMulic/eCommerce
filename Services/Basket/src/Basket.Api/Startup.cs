@@ -36,6 +36,8 @@ namespace Basket.Api
                 )
             );
 
+            services.AddAutoMapper(typeof(Mappings.BasketProfile));
+
             var redisSettings = Configuration
                 .GetSection("Redis")
                 .Get<RedisSettings>();
