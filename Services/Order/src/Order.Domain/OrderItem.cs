@@ -12,6 +12,11 @@ namespace Order.Domain
         private int units;
 
         public Guid ProductId { get; internal set; }
+        public string ProductName => productName;
+        public string ProductImage => productImage;
+        public decimal UnitPrice => unitPrice;
+        public decimal Discount => discount;
+        public int Units => units;
 
         public OrderItem()
         {

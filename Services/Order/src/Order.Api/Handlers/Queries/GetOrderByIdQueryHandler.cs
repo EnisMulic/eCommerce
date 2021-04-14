@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Order.Contracts.Responses;
 using Order.Core.Helpers;
 using Order.Core.Queries;
@@ -21,7 +22,11 @@ namespace Order.Api.Handlers.Queries
 
         public async Task<IResponse> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
         {
-            var order = await _context.Set<Domain.Order>().FindAsync(request.Id);
+            var order = await _context.Set<Domain.Order>()
+                .Include(i => i.OrderItems)
+                .Include(i => i.OrderStatus)
+                .SingleOrDefaultAsync(i => i.Id == request.Id);
+
             return _responseBuilder.Create<OrderResponse>(order);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Order.Domain.Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Order.Domain
@@ -13,7 +14,11 @@ namespace Order.Domain
         private Guid paymentMethodId;
         private readonly List<OrderItem> orderItems;
 
-        // public OrderStatus OrderStatus { get; private set; }
+        public DateTime OrderDate => orderDate;
+        public Guid BuyerId => buyerId;
+        public int OrderStatusId => orderStatusId;
+        public OrderStatus OrderStatus { get; private set; }
+        public Guid PaymentMethodId => paymentMethodId;
         public Address Address { get; private set; }
         public IReadOnlyCollection<OrderItem> OrderItems => orderItems;
 

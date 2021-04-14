@@ -13,6 +13,13 @@ namespace Order.Domain
         private int cardTypeId;
         public CardType CardType { get; private set; }
 
+        public string CardNumber => cardNumber;
+        public string SecurityNumber => securityNumber;
+        public string CardHolderName => cardHolderName;
+        public DateTime Expiration => expiration;
+        public int CardTypeId => cardTypeId;
+
+
         protected PaymentMethod()
         {
         }

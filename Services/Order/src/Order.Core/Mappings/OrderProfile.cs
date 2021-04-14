@@ -8,6 +8,8 @@ namespace Order.Core.Mappings
         public OrderProfile()
         {
             CreateMap<Domain.Order, OrderResponse>();
+            CreateMap<Domain.OrderItem, OrderItemResponse>();
+            CreateMap<Domain.OrderStatus, OrderStatusResponse>();
         }
     }
 }

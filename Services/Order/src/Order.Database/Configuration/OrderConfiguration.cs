@@ -49,7 +49,7 @@ namespace Order.Database.Configuration
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne<OrderStatus>()
+            builder.HasOne(o => o.OrderStatus)
                 .WithMany()
                 .HasForeignKey("orderStatusId")
                 .IsRequired(true);
