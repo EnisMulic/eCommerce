@@ -5,6 +5,7 @@ using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.EntityFramework.Storage;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
@@ -17,7 +18,7 @@ namespace Identity.Api
 {
     public class SeedData
     {
-        public static void EnsureSeedData(string connectionString)
+        public static void EnsureSeedData(string connectionString, IConfiguration configuration)
         {
             var services = new ServiceCollection();
             services.AddLogging();
@@ -48,98 +49,27 @@ namespace Identity.Api
                 var context = scope.ServiceProvider.GetService<ConfigurationDbContext>();
                 context.Database.Migrate();
 
-                EnsureSeedData(context);
+                EnsureSeedData(context, configuration);
 
                 var ctx = scope.ServiceProvider.GetService<ApplicationDbContext>();
                 ctx.Database.Migrate();
-                EnsureUsers(scope);
             }
         }
 
-        private static void EnsureUsers(IServiceScope scope)
-        {
-            var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-            var alice = userMgr.FindByNameAsync("alice").Result;
-            if (alice == null)
-            {
-                alice = new IdentityUser
-                {
-                    UserName = "alice",
-                    Email = "AliceSmith@email.com",
-                    EmailConfirmed = true,
-                };
-                var result = userMgr.CreateAsync(alice, "Pass123$").Result;
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-
-
-                result = userMgr.AddClaimsAsync(alice, new Claim[]
-                {
-                  new Claim(JwtClaimTypes.Name, "Alice Smith"),
-                  new Claim(JwtClaimTypes.GivenName, "Alice"),
-                  new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                  new Claim(JwtClaimTypes.WebSite, "http://alice.com"),
-                }).Result;
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-
-                Log.Debug("alice created");
-            }
-            else
-            {
-                Log.Debug("alice already exists");
-            }
-
-            var bob = userMgr.FindByNameAsync("bob").Result;
-            if (bob == null)
-            {
-                bob = new IdentityUser
-                {
-                    UserName = "bob",
-                    Email = "BobSmith@email.com",
-                    EmailConfirmed = true
-                };
-                var result = userMgr.CreateAsync(bob, "Pass123$").Result;
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-
-                result = userMgr.AddClaimsAsync(bob, new Claim[]
-                {
-                  new Claim(JwtClaimTypes.Name, "Bob Smith"),
-                  new Claim(JwtClaimTypes.GivenName, "Bob"),
-                  new Claim(JwtClaimTypes.FamilyName, "Smith"),
-                  new Claim(JwtClaimTypes.WebSite, "http://bob.com"),
-                  new Claim("location", "somewhere")
-                }).Result;
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception(result.Errors.First().Description);
-                }
-
-                Log.Debug("bob created");
-            }
-            else
-            {
-                Log.Debug("bob already exists");
-            }
-        }
-
-
-        private static void EnsureSeedData(ConfigurationDbContext context)
+        private static void EnsureSeedData(ConfigurationDbContext context, IConfiguration configuration)
         {
             if (!context.Clients.Any())
             {
+                Dictionary<string, string> clientUrls = new();
+
+                clientUrls.Add("ProductsApi", configuration.GetValue<string>("ProductsApiClient"));
+                clientUrls.Add("OrdersApi", configuration.GetValue<string>("OrdersApiClient"));
+                clientUrls.Add("BasketApi", configuration.GetValue<string>("BasketApiClient"));
+
                 Log.Debug("Clients being populated");
-                foreach (var client in Config.Clients.ToList())
+                foreach (var client in Config.GetClients(clientUrls).ToList())
                 {
+
                     context.Clients.Add(client.ToEntity());
                 }
 
@@ -183,7 +113,7 @@ namespace Identity.Api
             if (!context.ApiResources.Any())
             {
                 Log.Debug("ApiResources being populated");
-                foreach (var resource in Config.ApiResources.ToList())
+                foreach (var resource in Config.GetApiResources().ToList())
                 {
                     context.ApiResources.Add(resource.ToEntity());
                 }

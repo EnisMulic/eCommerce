@@ -78,24 +78,55 @@ namespace Identity.Api
                 new ApiScope("api1", "My API")
             };
 
-        public static IEnumerable<ApiResource> ApiResources =>
+        public static IEnumerable<ApiResource> GetApiResources() =>
             new ApiResource[]
             {
-
+                new ApiResource("products", "Products Service"),
+                new ApiResource("orders", "Orders Service"),
+                new ApiResource("basket", "Basket Service"),
             };
 
-        public static IEnumerable<Client> Clients =>
+        public static IEnumerable<Client> GetClients(Dictionary<string, string> clientUrls) =>
             new Client[]
             {
                 new Client
                 {
-                    ClientId = "client",
+                    ClientId = "productsswaggerui",
+                    ClientName = "Products Swagger UI",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
                     {
                         new Secret( "secret".Sha256())
                     },
-                    AllowedScopes = {"api1"}
+                    RedirectUris = { $"{clientUrls["ProductsApi"]}/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"{clientUrls["ProductsApi"]}/swagger/" },
+                    AllowedScopes = { "products" }
+                },
+                new Client
+                {
+                    ClientId = "ordersswaggerui",
+                    ClientName = "Orders Swagger UI",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret( "secret".Sha256())
+                    },
+                    RedirectUris = { $"{clientUrls["OrdersApi"]}/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"{clientUrls["OrdersApi"]}/swagger/" },
+                    AllowedScopes = { "orders" }
+                },
+                new Client
+                {
+                    ClientId = "basketswaggerui",
+                    ClientName = "Basket Swagger UI",
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    ClientSecrets =
+                    {
+                        new Secret( "secret".Sha256())
+                    },
+                    RedirectUris = { $"{clientUrls["BasketApi"]}/swagger/oauth2-redirect.html" },
+                    PostLogoutRedirectUris = { $"{clientUrls["BasketApi"]}/swagger/" },
+                    AllowedScopes = { "basket" }
                 }
             };
     }

@@ -51,8 +51,7 @@ namespace Identity.Api.Controllers
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             ILogger<AccountController> logger,
-            JwtSettings jwtSettings,
-            TestUserStore users = null)
+            JwtSettings jwtSettings)
         {
             _authService = authService;
             _interaction = interaction;
