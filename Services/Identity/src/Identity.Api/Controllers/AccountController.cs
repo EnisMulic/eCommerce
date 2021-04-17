@@ -142,6 +142,13 @@ namespace Identity.Api.Controllers
 
                     await _authService.SignInAsync(user, props);
 
+                    var isuser = new IdentityServerUser(user.Id)
+                    {
+                        DisplayName = user.UserName
+                    };
+
+                    await HttpContext.SignInAsync(isuser, props);
+
                     // make sure the returnUrl is still valid, and if yes - redirect back to authorize endpoint
                     if (_interaction.IsValidReturnUrl(model.ReturnUrl))
                     {

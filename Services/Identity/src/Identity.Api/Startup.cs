@@ -3,6 +3,7 @@ using Identity.Api.Database;
 using Identity.Api.Models;
 using Identity.Api.Services;
 using Identity.Api.Settings;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -40,11 +41,14 @@ namespace Identity.Api
                 .AddDefaultTokenProviders();
 
             services.AddIdentityServer()
+                .AddProfileService<ProfileService>()
                 .AddAspNetIdentity<ApplicationUser>()
+                .AddJwtBearerClientAuthentication()
+                .AddDeveloperSigningCredential()
                 .AddConfigurationStore(options =>
                 {
                     options.ConfigureDbContext = builder => builder.UseNpgsql(
-                        connectionString, 
+                        connectionString,
                         opt => opt.MigrationsAssembly(migrationAssembly));
                 })
                 .AddOperationalStore(options =>
@@ -52,8 +56,7 @@ namespace Identity.Api
                     options.ConfigureDbContext = builder => builder.UseNpgsql(
                         connectionString,
                         opt => opt.MigrationsAssembly(migrationAssembly));
-                })
-                .AddDeveloperSigningCredential();
+                });
 
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
@@ -63,6 +66,8 @@ namespace Identity.Api
 
                     options.ApiName = "api1";
                 });
+
+            services.AddScoped<IProfileService, ProfileService>();
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>
