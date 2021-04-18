@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Product.Contracts;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
 using Product.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Product.Api.Controllers
@@ -56,6 +56,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route(ApiRoutes.Product.AddAttribute)]
         public async Task<IActionResult> AddAttributeAsync(Guid id, List<ProductAttributeValueInsertRequest> request)
         {
@@ -70,6 +71,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpPatch]
+        [Authorize]
         [Route(ApiRoutes.Product.PatchAttribute)]
         public async Task<IActionResult> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)
         {
@@ -84,6 +86,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route(ApiRoutes.Product.DeleteAttribute)]
         public async Task<IActionResult> DeleteAttributeAsync(Guid id, ProductAttributeValueDeleteRequest request)
         {
@@ -98,6 +101,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route(ApiRoutes.Product.AddCategories)]
         public async Task<IActionResult> AddCategoriesAsync(Guid id, List<Guid> request)
         {
@@ -112,6 +116,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route(ApiRoutes.Product.DeleteCategories)]
         public async Task<IActionResult> DeleteCategoriesAsync(Guid id, List<Guid> request)
         {

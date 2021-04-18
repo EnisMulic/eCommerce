@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Product.Contracts.Responses;
 using Product.Core.Interfaces;
@@ -17,6 +18,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public virtual async Task<IActionResult> InsertAsync(TInsert request)
         {
             var response = await _service.InsertAsync(request);
@@ -30,6 +32,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public virtual async Task<IActionResult> UpdateAsync(Guid id, TUpdate request)
         {
             var response = await _service.UpdateAsync(id, request);
@@ -42,6 +45,7 @@ namespace Product.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public virtual async Task<IActionResult> DeleteAsync(Guid id)
         {
             var response = await _service.DeleteAsync(id);

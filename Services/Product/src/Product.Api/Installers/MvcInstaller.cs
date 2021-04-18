@@ -1,9 +1,12 @@
 ﻿using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Product.Api.Filters;
 using Product.Core.Helpers;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Product.Api.Installers
 {
@@ -35,6 +38,34 @@ namespace Product.Api.Installers
             services.AddControllers();
 
             services.AddScoped(typeof(IResponseBuilder<>), typeof(ResponseBuilder<>));
+
+
+            // prevent from mapping "sub" claim to nameidentifier.
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
+            var identityUrl = configuration.GetValue<string>("IdentityUrl");
+
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            //}).AddJwtBearer(options =>
+            //{
+            //    options.Authority = identityUrl;
+            //    options.RequireHttpsMetadata = false;
+            //    options.Audience = "products";
+            //});
+
+            services.AddAuthentication("Bearer")
+                .AddIdentityServerAuthentication("Bearer", options =>
+                {
+                    // required audience of access tokens
+                    options.ApiName = "products";
+
+                    // auth server base endpoint (this will be used to search for disco doc)
+                    options.Authority = identityUrl;
+                });
         }
     }
 }
