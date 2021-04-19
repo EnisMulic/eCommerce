@@ -5,6 +5,7 @@ using Basket.Contracts;
 using Basket.Contracts.Requests;
 using Basket.Contracts.Responses;
 using Basket.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace Basket.Api.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Basket.Get)]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             var customerId = HttpContext.GetCustomerId();
@@ -37,6 +39,7 @@ namespace Basket.Api.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Basket.Update)]
+        [Authorize]
         public async Task<IActionResult> Update(CustomerBasketUpdateRequest request)
         {
             var customerId = HttpContext.GetCustomerId();
@@ -51,6 +54,7 @@ namespace Basket.Api.Controllers
 
         [HttpDelete]
         [Route(ApiRoutes.Basket.Delete)]
+        [Authorize]
         public async Task<IActionResult> Delete()
         {
             var customerId = HttpContext.GetCustomerId();
@@ -66,6 +70,7 @@ namespace Basket.Api.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Basket.Checkout)]
+        [Authorize]
         public async Task<IActionResult> Checkout(CheckoutRequest request)
         {
             var customerId = HttpContext.GetCustomerId();

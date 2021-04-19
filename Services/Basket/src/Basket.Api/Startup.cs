@@ -1,18 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Basket.Api.Filters;
 using Basket.Api.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Basket.Api
 {
@@ -49,9 +48,47 @@ namespace Basket.Api
             services.AddStackExchangeRedisCache(i => i.Configuration = redisSettings.ConnectionString);
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+
+            // prevent from mapping "sub" claim to nameidentifier.
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
+            var identityUrl = Configuration.GetValue<string>("IdentityUrl");
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = identityUrl;
+                    options.Audience = "Order Api";
+                    options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });
+
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.Api", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Basket.Api", Version = "v1" });
+                options.MapType<Guid>(() => new OpenApiSchema { Type = "string", Format = null });
+                options.DescribeAllParametersInCamelCase();
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows()
+                    {
+                        ClientCredentials = new OpenApiOAuthFlow()
+                        {
+                            AuthorizationUrl = new Uri($"{identityUrl}/connect/authorize"),
+                            TokenUrl = new Uri($"{identityUrl}/connect/token"),
+                            Scopes = new Dictionary<string, string>()
+                            {
+                                { "basket-api", "Basket Api" }
+                            }
+                        }
+                    }
+                });
+                options.OperationFilter<AuthorizeCheckOperationFilter>();
             });
         }
 
@@ -62,7 +99,13 @@ namespace Basket.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.Api v1"));
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.Api V1");
+
+                    options.OAuthClientId("basketswaggerui");
+                    options.OAuthClientSecret("secret");
+                });
             }
 
             app.UseHttpsRedirection();
