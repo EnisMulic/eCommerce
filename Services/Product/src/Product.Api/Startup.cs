@@ -1,4 +1,3 @@
-using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +29,6 @@ namespace Product.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Product.Api v1"));
 
                 app.UseSwaggerUI(options =>
                 {
@@ -38,7 +36,6 @@ namespace Product.Api
 
                     options.OAuthClientId("productsswaggerui");
                     options.OAuthClientSecret("secret");
-                    options.OAuthAppName("Products Swagger UI");
                 });
             }
 

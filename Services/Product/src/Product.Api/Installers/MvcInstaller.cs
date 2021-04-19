@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Product.Api.Filters;
 using Product.Core.Helpers;
 using System.IdentityModel.Tokens.Jwt;
@@ -29,42 +30,32 @@ namespace Product.Api.Installers
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            services.AddMvc(options => 
+            services.AddMvc(options =>
             {
                 options.Filters.Add<ValidationFilter>();
-            }).AddFluentValidation(configuration => 
+            }).AddFluentValidation(configuration =>
                 configuration.RegisterValidatorsFromAssemblyContaining<Startup>());
 
             services.AddControllers();
 
             services.AddScoped(typeof(IResponseBuilder<>), typeof(ResponseBuilder<>));
 
-
             // prevent from mapping "sub" claim to nameidentifier.
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 
             var identityUrl = configuration.GetValue<string>("IdentityUrl");
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
-            //}).AddJwtBearer(options =>
-            //{
-            //    options.Authority = identityUrl;
-            //    options.RequireHttpsMetadata = false;
-            //    options.Audience = "products";
-            //});
-
-            services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication("Bearer", options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    // required audience of access tokens
-                    options.ApiName = "products";
-
-                    // auth server base endpoint (this will be used to search for disco doc)
                     options.Authority = identityUrl;
+                    options.Audience = "Product Api";
+                    options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
                 });
         }
     }

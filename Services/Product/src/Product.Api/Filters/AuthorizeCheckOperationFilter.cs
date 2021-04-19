@@ -25,12 +25,12 @@ namespace Product.Api.Filters
             };
 
             operation.Security = new List<OpenApiSecurityRequirement>
+            {
+                new OpenApiSecurityRequirement
                 {
-                    new OpenApiSecurityRequirement
-                    {
-                        [ oAuthScheme ] = new [] { "products" }
-                    }
-                };
+                    [ oAuthScheme ] = new [] { "product-api" }
+                }
+            };
         }
     }
 }

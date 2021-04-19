@@ -36,7 +36,7 @@ namespace Product.Api.Installers
                             TokenUrl = new Uri($"{identityUrl}/connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
-                                { "products", "Products Service" }
+                                { "product-api", "Product Api" }
                             }
                         }
                     }
