@@ -103,6 +103,8 @@ namespace Identity.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Identity.Api v1"));
             }
 
+            app.UseCors();
+
             app.UseStaticFiles();
             app.UseHttpsRedirection();
 

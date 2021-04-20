@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Services", "src\Pro
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Core", "src\Product.Core\Product.Core.csproj", "{A08DA2CD-A838-4D2C-9A6D-31CE4764A213}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Common.Authorization", "..\..\Common\Product.Common.Authorization\Product.Common.Authorization.csproj", "{FADCBDA2-5372-45B5-B8DD-D0DE45FC85E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{A08DA2CD-A838-4D2C-9A6D-31CE4764A213}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A08DA2CD-A838-4D2C-9A6D-31CE4764A213}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A08DA2CD-A838-4D2C-9A6D-31CE4764A213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FADCBDA2-5372-45B5-B8DD-D0DE45FC85E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FADCBDA2-5372-45B5-B8DD-D0DE45FC85E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FADCBDA2-5372-45B5-B8DD-D0DE45FC85E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FADCBDA2-5372-45B5-B8DD-D0DE45FC85E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

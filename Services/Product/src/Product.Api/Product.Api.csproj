@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\Product.Common.Authorization\Product.Common.Authorization.csproj" />
     <ProjectReference Include="..\Product.Core\Product.Core.csproj" />
     <ProjectReference Include="..\Product.Database\Product.Database.csproj" />
     <ProjectReference Include="..\Product.Services\Product.Services.csproj" />

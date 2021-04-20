@@ -2,6 +2,7 @@
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
+using Product.Common.Authorization;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Json;
@@ -81,7 +82,7 @@ namespace Identity.Api
         public static IEnumerable<ApiResource> GetApiResources() =>
             new ApiResource[]
             {
-                new ApiResource("products", "Products Service"),
+                new ApiResource(ProductApi.Resource.Name, ProductApi.Resource.DisplayName),
                 new ApiResource("orders", "Orders Service"),
                 new ApiResource("basket", "Basket Service"),
             };
@@ -91,8 +92,8 @@ namespace Identity.Api
             {
                 new Client
                 {
-                    ClientId = "productsswaggerui",
-                    ClientName = "Products Swagger UI",
+                    ClientId = ProductSwaggerClient.Id,
+                    ClientName = ProductSwaggerClient.Name,
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
                     {
@@ -100,7 +101,7 @@ namespace Identity.Api
                     },
                     RedirectUris = { $"{clientUrls["ProductsApi"]}/swagger/oauth2-redirect.html" },
                     PostLogoutRedirectUris = { $"{clientUrls["ProductsApi"]}/swagger/" },
-                    AllowedScopes = { "products" }
+                    AllowedScopes = { ProductApi.Resource.Name }
                 },
                 new Client
                 {

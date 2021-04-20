@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using Product.Common.Authorization;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace Product.Api.Filters
             {
                 new OpenApiSecurityRequirement
                 {
-                    [ oAuthScheme ] = new [] { "product-api" }
+                    [ oAuthScheme ] = new [] { ProductApi.Resource.Name }
                 }
             };
         }

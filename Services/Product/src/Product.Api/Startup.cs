@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Product.Api.Installers;
+using Product.Common.Authorization;
 
 namespace Product.Api
 {
@@ -34,7 +35,7 @@ namespace Product.Api
                 {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Product.Api V1");
 
-                    options.OAuthClientId("productsswaggerui");
+                    options.OAuthClientId(ProductSwaggerClient.Id);
                     options.OAuthClientSecret("secret");
                 });
             }
