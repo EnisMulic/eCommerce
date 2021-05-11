@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Common.Order.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Order.Api.Filters;
@@ -29,7 +30,8 @@ namespace Order.Api.Installers
                             TokenUrl = new Uri($"{identityUrl}/connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
-                                { "order-api", "Order Api" }
+                                { OrderApi.Scope.Read.Name, OrderApi.Scope.Read.DisplayName },
+                                { OrderApi.Scope.Write.Name, OrderApi.Scope.Write.DisplayName },
                             }
                         }
                     }

@@ -1,4 +1,5 @@
-﻿using Common.Product.Authorization;
+﻿using Common.Order.Authorization;
+using Common.Product.Authorization;
 using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
@@ -79,6 +80,8 @@ namespace Identity.Api
                 new ApiScope(ProductApi.Scope.Read.Name, ProductApi.Scope.Read.DisplayName),
                 new ApiScope(ProductApi.Scope.Write.Name, ProductApi.Scope.Write.DisplayName),
                 new ApiScope(ProductApi.Scope.Delete.Name, ProductApi.Scope.Delete.DisplayName),
+                new ApiScope(OrderApi.Scope.Read.Name, OrderApi.Scope.Read.DisplayName),
+                new ApiScope(OrderApi.Scope.Write.Name, OrderApi.Scope.Write.DisplayName),
             };
 
         public static IEnumerable<ApiResource> GetApiResources() =>
@@ -95,7 +98,16 @@ namespace Identity.Api
                         ProductApi.Scope.Delete.Name,
                     }
                 },
-                new ApiResource("orders", "Orders Service"),
+                new ApiResource
+                {
+                    Name = OrderApi.Resource.Name,
+                    DisplayName = OrderApi.Resource.DisplayName,
+                    Scopes = new List<string>
+                    {
+                        OrderApi.Scope.Read.Name,
+                        OrderApi.Scope.Write.Name,
+                    }
+                },
                 new ApiResource("basket", "Basket Service"),
             };
 

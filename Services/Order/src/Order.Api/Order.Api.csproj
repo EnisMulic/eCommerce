@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\Common.Order.Authorization\Common.Order.Authorization.csproj" />
     <ProjectReference Include="..\Order.Contracts\Order.Contracts.csproj" />
     <ProjectReference Include="..\Order.Core\Order.Core.csproj" />
     <ProjectReference Include="..\Order.Database\Order.Database.csproj" />

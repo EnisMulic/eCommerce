@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Common.Order.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Order.Api.Filters
             {
                 new OpenApiSecurityRequirement
                 {
-                    [ oAuthScheme ] = new [] { "order-api" }
+                    [ oAuthScheme ] = new [] { OrderApi.Resource.Name }
                 }
             };
         }

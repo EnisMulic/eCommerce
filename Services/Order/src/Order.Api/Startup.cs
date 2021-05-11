@@ -1,3 +1,4 @@
+using Common.Order.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,7 +34,7 @@ namespace Order.Api
                 {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Order.Api V1");
 
-                    options.OAuthClientId("ordersswaggerui");
+                    options.OAuthClientId(OrderSwaggerClient.Id);
                     options.OAuthClientSecret("secret");
                 });
             }
