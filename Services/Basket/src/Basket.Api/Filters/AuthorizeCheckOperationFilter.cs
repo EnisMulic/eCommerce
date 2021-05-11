@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Common.Basket.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Basket.Api.Filters
             {
                 new OpenApiSecurityRequirement
                 {
-                    [ oAuthScheme ] = new [] { "basket-api" }
+                    [ oAuthScheme ] = new [] { BasketApi.Resource.Name }
                 }
             };
         }

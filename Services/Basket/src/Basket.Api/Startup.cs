@@ -1,5 +1,6 @@
 using Basket.Api.Filters;
 using Basket.Api.Settings;
+using Common.Basket.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -83,7 +84,7 @@ namespace Basket.Api
                             TokenUrl = new Uri($"{identityUrl}/connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
-                                { "basket-api", "Basket Api" }
+                                { BasketApi.Resource.Name, BasketApi.Resource.DisplayName },
                             }
                         }
                     }
@@ -103,7 +104,7 @@ namespace Basket.Api
                 {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Basket.Api V1");
 
-                    options.OAuthClientId("basketswaggerui");
+                    options.OAuthClientId(BasketSwaggerClient.Id);
                     options.OAuthClientSecret("secret");
                 });
             }

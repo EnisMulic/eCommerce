@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\Common.Basket.Authorization\Common.Basket.Authorization.csproj" />
     <ProjectReference Include="..\Basket.Contracts\Basket.Contracts.csproj" />
     <ProjectReference Include="..\Basket.Domain\Basket.Domain.csproj" />
   </ItemGroup>

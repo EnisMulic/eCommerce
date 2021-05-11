@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\Common.Basket.Authorization\Common.Basket.Authorization.csproj" />
     <ProjectReference Include="..\..\..\..\Common\Common.Order.Authorization\Common.Order.Authorization.csproj" />
     <ProjectReference Include="..\..\..\..\Common\Common.Product.Authorization\Common.Product.Authorization.csproj" />
   </ItemGroup>

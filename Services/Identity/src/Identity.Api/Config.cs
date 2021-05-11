@@ -1,4 +1,5 @@
-﻿using Common.Order.Authorization;
+﻿using Common.Basket.Authorization;
+using Common.Order.Authorization;
 using Common.Product.Authorization;
 using IdentityModel;
 using IdentityServer4;
@@ -82,6 +83,7 @@ namespace Identity.Api
                 new ApiScope(ProductApi.Scope.Delete.Name, ProductApi.Scope.Delete.DisplayName),
                 new ApiScope(OrderApi.Scope.Read.Name, OrderApi.Scope.Read.DisplayName),
                 new ApiScope(OrderApi.Scope.Write.Name, OrderApi.Scope.Write.DisplayName),
+                new ApiScope(BasketApi.Resource.Name, BasketApi.Resource.DisplayName),
             };
 
         public static IEnumerable<ApiResource> GetApiResources() =>
@@ -108,7 +110,15 @@ namespace Identity.Api
                         OrderApi.Scope.Write.Name,
                     }
                 },
-                new ApiResource("basket", "Basket Service"),
+                new ApiResource
+                {
+                    Name = BasketApi.Resource.Name,
+                    DisplayName = BasketApi.Resource.DisplayName,
+                    Scopes = new List<string>
+                    {
+                        BasketApi.Resource.Name
+                    }
+                },
             };
 
         public static IEnumerable<Client> GetClients(Dictionary<string, string> clientUrls) =>
@@ -129,8 +139,8 @@ namespace Identity.Api
                 },
                 new Client
                 {
-                    ClientId = "ordersswaggerui",
-                    ClientName = "Orders Swagger UI",
+                    ClientId = OrderSwaggerClient.Id,
+                    ClientName = OrderSwaggerClient.Name,
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
                     {
@@ -138,12 +148,12 @@ namespace Identity.Api
                     },
                     RedirectUris = { $"{clientUrls["OrdersApi"]}/swagger/oauth2-redirect.html" },
                     PostLogoutRedirectUris = { $"{clientUrls["OrdersApi"]}/swagger/" },
-                    AllowedScopes = { "orders" }
+                    AllowedScopes = { OrderApi.Resource.Name }
                 },
                 new Client
                 {
-                    ClientId = "basketswaggerui",
-                    ClientName = "Basket Swagger UI",
+                    ClientId = BasketSwaggerClient.Id,
+                    ClientName = BasketSwaggerClient.Name,
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
                     {
@@ -151,7 +161,7 @@ namespace Identity.Api
                     },
                     RedirectUris = { $"{clientUrls["BasketApi"]}/swagger/oauth2-redirect.html" },
                     PostLogoutRedirectUris = { $"{clientUrls["BasketApi"]}/swagger/" },
-                    AllowedScopes = { "basket" }
+                    AllowedScopes = { BasketApi.Resource.Name }
                 }
             };
     }

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Product.Authorizatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Order.Authorization", "..\..\Common\Common.Order.Authorization\Common.Order.Authorization.csproj", "{66B919C9-850E-46DF-893C-EC844B2CC878}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Basket.Authorization", "..\..\Common\Common.Basket.Authorization\Common.Basket.Authorization.csproj", "{779433FB-0DC6-4305-BAEB-2461DF856847}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{66B919C9-850E-46DF-893C-EC844B2CC878}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66B919C9-850E-46DF-893C-EC844B2CC878}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66B919C9-850E-46DF-893C-EC844B2CC878}.Release|Any CPU.Build.0 = Release|Any CPU
+		{779433FB-0DC6-4305-BAEB-2461DF856847}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{779433FB-0DC6-4305-BAEB-2461DF856847}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{779433FB-0DC6-4305-BAEB-2461DF856847}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{779433FB-0DC6-4305-BAEB-2461DF856847}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
