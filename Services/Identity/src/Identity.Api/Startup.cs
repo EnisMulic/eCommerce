@@ -63,8 +63,6 @@ namespace Identity.Api
                 {
                     options.Authority = "https://localhost:44368/";
                     options.RequireHttpsMetadata = false;
-
-                    options.ApiName = "api1";
                 });
 
             services.AddScoped<IProfileService, ProfileService>();

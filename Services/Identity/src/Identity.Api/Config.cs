@@ -1,8 +1,8 @@
-﻿using IdentityModel;
+﻿using Common.Product.Authorization;
+using IdentityModel;
 using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using Product.Common.Authorization;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Json;
@@ -76,13 +76,25 @@ namespace Identity.Api
         public static IEnumerable<ApiScope> ApiScopes =>
             new ApiScope[]
             {
-                new ApiScope("api1", "My API")
+                new ApiScope(ProductApi.Scope.Read.Name, ProductApi.Scope.Read.DisplayName),
+                new ApiScope(ProductApi.Scope.Write.Name, ProductApi.Scope.Write.DisplayName),
+                new ApiScope(ProductApi.Scope.Delete.Name, ProductApi.Scope.Delete.DisplayName),
             };
 
         public static IEnumerable<ApiResource> GetApiResources() =>
             new ApiResource[]
             {
-                new ApiResource(ProductApi.Resource.Name, ProductApi.Resource.DisplayName),
+                new ApiResource
+                {
+                    Name = ProductApi.Resource.Name,
+                    DisplayName = ProductApi.Resource.DisplayName,
+                    Scopes = new List<string>
+                    {
+                        ProductApi.Scope.Read.Name,
+                        ProductApi.Scope.Write.Name,
+                        ProductApi.Scope.Delete.Name,
+                    }
+                },
                 new ApiResource("orders", "Orders Service"),
                 new ApiResource("basket", "Basket Service"),
             };

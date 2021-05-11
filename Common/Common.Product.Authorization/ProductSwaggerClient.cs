@@ -1,4 +1,4 @@
-﻿namespace Product.Common.Authorization
+﻿namespace Common.Product.Authorization
 {
     public static class ProductSwaggerClient
     {

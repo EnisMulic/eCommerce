@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Common.Product.Authorization;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Product.Api.Filters;
-using Product.Common.Authorization;
 using System;
 using System.Collections.Generic;
 
@@ -37,7 +37,9 @@ namespace Product.Api.Installers
                             TokenUrl = new Uri($"{identityUrl}/connect/token"),
                             Scopes = new Dictionary<string, string>()
                             {
-                                { ProductApi.Resource.Name, ProductApi.Resource.DisplayName }
+                                { ProductApi.Scope.Read.Name, ProductApi.Scope.Read.DisplayName },
+                                { ProductApi.Scope.Write.Name, ProductApi.Scope.Write.DisplayName },
+                                { ProductApi.Scope.Delete.Name, ProductApi.Scope.Delete.DisplayName }
                             }
                         }
                     }

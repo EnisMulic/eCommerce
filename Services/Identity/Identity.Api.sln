@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31105.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Api", "src\Identity.Api\Identity.Api.csproj", "{F47BC129-8C50-42CF-9EBB-372857E760AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Common.Authorization", "..\..\Common\Product.Common.Authorization\Product.Common.Authorization.csproj", "{95F357CA-B25A-4119-9E84-F94BE9D6669A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Product.Authorization", "..\..\Common\Common.Product.Authorization\Common.Product.Authorization.csproj", "{F9F6B1C9-654D-4BF3-8F38-9A1F96964AD0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{F47BC129-8C50-42CF-9EBB-372857E760AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F47BC129-8C50-42CF-9EBB-372857E760AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F47BC129-8C50-42CF-9EBB-372857E760AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95F357CA-B25A-4119-9E84-F94BE9D6669A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95F357CA-B25A-4119-9E84-F94BE9D6669A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95F357CA-B25A-4119-9E84-F94BE9D6669A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95F357CA-B25A-4119-9E84-F94BE9D6669A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9F6B1C9-654D-4BF3-8F38-9A1F96964AD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9F6B1C9-654D-4BF3-8F38-9A1F96964AD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9F6B1C9-654D-4BF3-8F38-9A1F96964AD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9F6B1C9-654D-4BF3-8F38-9A1F96964AD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
