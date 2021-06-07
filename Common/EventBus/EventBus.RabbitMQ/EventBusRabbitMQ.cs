@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using EventBus.Extensions;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using System;
 using System.Text.Json;
@@ -11,11 +12,20 @@ namespace EventBus.RabbitMQ
 
         private readonly IPersistentConnection _persistentConnection;
         private readonly ILogger<EventBusRabbitMQ> _logger;
+        private readonly IEventBusSubscriptionsManager _subsManager;
 
-        public EventBusRabbitMQ(IPersistentConnection persistentConnection, ILogger<EventBusRabbitMQ> logger)
+        private readonly string _queueName;
+
+        public EventBusRabbitMQ(
+            IPersistentConnection persistentConnection,
+            ILogger<EventBusRabbitMQ> logger,
+            IEventBusSubscriptionsManager subsManager, 
+            string queueName)
         {
             _persistentConnection = persistentConnection;
             _logger = logger;
+            _subsManager = subsManager;
+            _queueName = queueName;
         }
 
         public void Publish(IntegrationEvent @event)
@@ -52,24 +62,55 @@ namespace EventBus.RabbitMQ
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            throw new NotImplementedException();
+            var eventName = _subsManager.GetEventKey<T>();
+
+            _logger.LogInformation(
+                "Subscribing to event {EventName} with {EventHandler}", eventName, typeof(TH).GetGenericTypeName());
+
+            Subscribe(eventName);
+            _subsManager.AddSubscription<T, TH>();
         }
 
         public void SubscribeDynamic<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
         {
-            throw new NotImplementedException();
+            _logger.LogInformation(
+                "Subscribing to dynamic event {EventName} with {EventHandler}", eventName, typeof(TH).GetGenericTypeName());
+
+            Subscribe(eventName);
+            _subsManager.AddDynamicSubscription<TH>(eventName);
+        }
+
+        private void Subscribe(string eventName)
+        {
+            var containsKey = _subsManager.HasSubscriptionForEvent(eventName);
+            if (!containsKey)
+            {
+                if (!_persistentConnection.IsConnected)
+                {
+                    _persistentConnection.TryConnect();
+                }
+
+                using var channel = _persistentConnection.CreateModel();
+                channel.QueueBind(queue: _queueName, exchange: BROKER_NAME, routingKey: eventName);
+            }
         }
 
         public void Unsubscribe<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            throw new NotImplementedException();
+            var eventName = _subsManager.GetEventKey<T>();
+
+            _logger.LogInformation("Unsubscribing from event {EventName}", eventName);
+
+            _subsManager.RemoveSubscription<T, TH>();
         }
 
         public void UnsubscribeDynamic<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("Unsubscribing from dynamic event {EventName}", eventName);
+
+            _subsManager.RemoveDynamicSubsciption<TH>(eventName);
         }
 
         public void Dispose()
