@@ -5,7 +5,7 @@ namespace EventBus.RabbitMQ
 {
     public interface IPersistentConnection : IDisposable
     {
-        bool IsConnected { get;  }
+        bool IsConnected { get; }
         bool TryConnect();
         IModel CreateModel();
     }
