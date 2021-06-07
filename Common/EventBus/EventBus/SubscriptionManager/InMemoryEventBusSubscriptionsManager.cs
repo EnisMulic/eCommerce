@@ -101,6 +101,7 @@ namespace EventBus
         public void RemoveDynamicSubsciption<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
         {
             var handler = FindDynamicHandlerToRemove<TH>(eventName);
+            RemoveHandler(eventName, handler);
         }
 
         public void RemoveSubscription<T, TH>()
