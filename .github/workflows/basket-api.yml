@@ -7,12 +7,16 @@ on:
     paths:
       - .github/workflows/basket-api.yml
       - Services/Basket/**
+      - Common/Common.Basket.*
+      - Common/EventBus/**
   pull_request:
     branches:
       - '*'
     paths:
       - .github/workflows/basket-api.yml
       - Services/Basket/**
+      - Common/Common.Basket.*
+      - Common/EventBus/**
   
 
 jobs:
