@@ -12,14 +12,14 @@ namespace EventBus.RabbitMQ
 
         private readonly IPersistentConnection _persistentConnection;
         private readonly ILogger<EventBusRabbitMQ> _logger;
-        private readonly IEventBusSubscriptionsManager _subsManager;
+        private readonly ISubscriptionsManager _subsManager;
 
         private readonly string _queueName;
 
         public EventBusRabbitMQ(
             IPersistentConnection persistentConnection,
             ILogger<EventBusRabbitMQ> logger,
-            IEventBusSubscriptionsManager subsManager, 
+            ISubscriptionsManager subsManager, 
             string queueName)
         {
             _persistentConnection = persistentConnection;

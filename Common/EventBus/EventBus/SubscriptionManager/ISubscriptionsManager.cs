@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace EventBus
 {
-    public interface IEventBusSubscriptionsManager
+    public interface ISubscriptionsManager
     {
         bool IsEmpty { get; }
         event EventHandler<string> OnEventRemoved;
