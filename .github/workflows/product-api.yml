@@ -7,12 +7,16 @@ on:
     paths:
       - .github/workflows/product-api.yml
       - Services/Product/**
+      - Common/Common.Product.*
+      - Common/EventBus/**
   pull_request:
     branches:
       - '*'
     paths:
       - .github/workflows/product-api.yml
       - Services/Product/**
+      - Common/Common.Product.*
+      - Common/EventBus/**
   
 
 jobs:

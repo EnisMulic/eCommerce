@@ -7,12 +7,14 @@ on:
     paths:
       - .github/workflows/identity-api.yml
       - Services/Identity/**
+      - Common/**
   pull_request:
     branches:
       - '*'
     paths:
       - .github/workflows/identity-api.yml
       - Services/Identity/**
+      - Common/**
   
 
 jobs:

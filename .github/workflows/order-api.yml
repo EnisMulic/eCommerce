@@ -7,12 +7,16 @@ on:
     paths:
       - .github/workflows/order-api.yml
       - Services/Order/**
+      - Common/Common.Order.*
+      - Common/EventBus/**
   pull_request:
     branches:
       - '*'
     paths:
       - .github/workflows/order-api.yml
       - Services/Order/**
+      - Common/Common.Order.*
+      - Common/EventBus/**
   
 
 jobs:
