@@ -25,6 +25,7 @@
     <ProjectReference Include="..\..\..\..\Common\Common.Basket.Authorization\Common.Basket.Authorization.csproj" />
     <ProjectReference Include="..\..\..\..\Common\Common.Order.Authorization\Common.Order.Authorization.csproj" />
     <ProjectReference Include="..\..\..\..\Common\Common.Product.Authorization\Common.Product.Authorization.csproj" />
+    <ProjectReference Include="..\..\..\..\Common\EventBus\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
   </ItemGroup>
 
 </Project>
