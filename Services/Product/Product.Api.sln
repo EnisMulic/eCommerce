@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Product.Core", "src\Product
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Product.Authorization", "..\..\Common\Common.Product.Authorization\Common.Product.Authorization.csproj", "{8C487359-7B55-4A2A-BFCF-6619186E54EE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "..\..\Common\EventBus\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj", "{EBCD600A-68EB-499E-8356-119E1DD03932}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "..\..\Common\EventBus\EventBus\EventBus.csproj", "{26CB1209-5376-45EE-AEEA-F93C4698A52E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{8C487359-7B55-4A2A-BFCF-6619186E54EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C487359-7B55-4A2A-BFCF-6619186E54EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C487359-7B55-4A2A-BFCF-6619186E54EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBCD600A-68EB-499E-8356-119E1DD03932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBCD600A-68EB-499E-8356-119E1DD03932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBCD600A-68EB-499E-8356-119E1DD03932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBCD600A-68EB-499E-8356-119E1DD03932}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26CB1209-5376-45EE-AEEA-F93C4698A52E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26CB1209-5376-45EE-AEEA-F93C4698A52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26CB1209-5376-45EE-AEEA-F93C4698A52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26CB1209-5376-45EE-AEEA-F93C4698A52E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
