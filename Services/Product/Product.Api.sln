@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "..\..\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "..\..\Common\EventBus\EventBus\EventBus.csproj", "{26CB1209-5376-45EE-AEEA-F93C4698A52E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.IntegrationEventLog", "..\..\Common\EventBus\EventBus.IntegrationEventLog\EventBus.IntegrationEventLog.csproj", "{5EF947FD-47AA-4FE8-B954-DBA2292405DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{26CB1209-5376-45EE-AEEA-F93C4698A52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26CB1209-5376-45EE-AEEA-F93C4698A52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26CB1209-5376-45EE-AEEA-F93C4698A52E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EF947FD-47AA-4FE8-B954-DBA2292405DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF947FD-47AA-4FE8-B954-DBA2292405DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF947FD-47AA-4FE8-B954-DBA2292405DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF947FD-47AA-4FE8-B954-DBA2292405DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

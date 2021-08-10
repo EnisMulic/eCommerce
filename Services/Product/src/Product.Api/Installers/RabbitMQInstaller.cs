@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Product.Api.Options;
+using Product.Core.Interfaces;
+using Product.Services;
 using RabbitMQ.Client;
 using System;
 using System.Data.Common;
@@ -67,6 +69,8 @@ namespace Product.Api.Installers
             });
 
             services.AddSingleton<ISubscriptionsManager, InMemorySubscriptionsManager>();
+
+            services.AddTransient<IProductIntegrationEventService, ProductIntegrationEventService>();
         }
     }
 }

@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Common\Common.Product.Authorization\Common.Product.Authorization.csproj" />
+    <ProjectReference Include="..\..\..\..\Common\EventBus\EventBus.IntegrationEventLog\EventBus.IntegrationEventLog.csproj" />
     <ProjectReference Include="..\..\..\..\Common\EventBus\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
     <ProjectReference Include="..\Product.Core\Product.Core.csproj" />
     <ProjectReference Include="..\Product.Database\Product.Database.csproj" />

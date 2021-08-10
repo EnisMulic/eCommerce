@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
 using Product.Core.Helpers;
+using Product.Core.IntegrationEvents;
 using Product.Core.Interfaces;
 using Product.Database;
 using Product.Domain;
@@ -20,10 +21,17 @@ namespace Product.Services
         IProductService
     {
         private readonly IImageUploadService _imageUploadService;
-        public ProductService(IImageUploadService imageUploadService, ProductDbContext context, IMapper mapper, IResponseBuilder<Domain.Product> responseBuilder) 
-            : base(context, mapper, responseBuilder)
+        private readonly IProductIntegrationEventService _productIntegrationEventService;
+        public ProductService(
+            IImageUploadService imageUploadService, 
+            ProductDbContext context, 
+            IMapper mapper, 
+            IResponseBuilder<Domain.Product> responseBuilder, 
+            IProductIntegrationEventService productIntegrationEventService
+        ) : base(context, mapper, responseBuilder)
         {
             _imageUploadService = imageUploadService;
+            _productIntegrationEventService = productIntegrationEventService;
         }
 
         public override async Task<IResponse> InsertAsync(ProductInsertRequest request)
@@ -63,10 +71,26 @@ namespace Product.Services
             image.Uri = uri;
             _context.Set<Image>().Update(image);
 
+            var oldPrice = entity.Price;
+            var raiseProductPriceChangedEvent = request.Price != oldPrice;
+            
             _mapper.Map(request, entity);
 
             _context.Set<Domain.Product>().Update(entity);
-            await _context.SaveChangesAsync();
+
+            if (raiseProductPriceChangedEvent)
+            {
+                var priceChangedEvent = new ProductPriceChangedIntegrationEvent(entity.Id, request.Price, oldPrice);
+
+                await _productIntegrationEventService.SaveEventAndProductContextChangesAsync(priceChangedEvent);
+                await _productIntegrationEventService.PublishThroughEventBusAsync(priceChangedEvent);
+            }
+            else
+            {
+                await _context.SaveChangesAsync();
+            }
+
+
 
             var response = _mapper.Map<ProductResponse>(entity);
             return new Response<ProductResponse>(response);
