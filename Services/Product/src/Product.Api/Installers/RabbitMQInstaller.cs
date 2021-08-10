@@ -1,11 +1,14 @@
 using Autofac;
 using EventBus;
+using EventBus.IntegrationEventLog.Services;
 using EventBus.RabbitMQ;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Product.Api.Options;
 using RabbitMQ.Client;
+using System;
+using System.Data.Common;
 
 namespace Product.Api.Installers
 {
@@ -13,6 +16,10 @@ namespace Product.Api.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
+            services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(sp =>
+                (DbConnection conn) => new IntegrationEventLogService(conn)
+            );
+            
             var settings = configuration.GetSection(RabbitMQOptions.RabbitMQ).Get<RabbitMQOptions>();
 
             services.AddSingleton<IPersistentConnection>(serviceProvider =>
