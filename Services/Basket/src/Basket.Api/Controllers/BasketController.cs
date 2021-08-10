@@ -30,7 +30,7 @@ namespace Basket.Api.Controllers
         public async Task<IActionResult> Get()
         {
             var customerId = HttpContext.GetCustomerId();
-            var basket = await _repository.GetBasketAsync(customerId);
+            var basket = await _repository.GetBasketAsync(Convert.ToString(customerId));
 
             var response = _mapper.Map<CustomerBasketResponse>(basket);
 
@@ -58,7 +58,7 @@ namespace Basket.Api.Controllers
         public async Task<IActionResult> Delete()
         {
             var customerId = HttpContext.GetCustomerId();
-            var response = await _repository.DeleteBasketAsync(customerId);
+            var response = await _repository.DeleteBasketAsync(Convert.ToString(customerId));
 
             if (!response)
             {
@@ -74,7 +74,7 @@ namespace Basket.Api.Controllers
         public async Task<IActionResult> Checkout(CheckoutRequest request)
         {
             var customerId = HttpContext.GetCustomerId();
-            var basket = await _repository.GetBasketAsync(customerId);
+            var basket = await _repository.GetBasketAsync(Convert.ToString(customerId));
 
             if(basket == null)
             {

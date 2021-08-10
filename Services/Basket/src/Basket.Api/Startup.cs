@@ -1,8 +1,11 @@
 using Autofac;
 using Basket.Api.Filters;
+using Basket.Api.IntegrationEvents;
+using Basket.Api.Repository;
 using Basket.Api.Settings;
 using Common.Basket.Authorization;
 using EventBus;
+using EventBus.IntegrationEventLog.Services;
 using EventBus.RabbitMQ;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -17,6 +20,7 @@ using RabbitMQ.Client;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Basket.Api
@@ -42,17 +46,32 @@ namespace Basket.Api
             );
 
             services.AddAutoMapper(typeof(Mappings.BasketProfile));
+            services.AddTransient<IBasketRepository, BasketRepository>();
 
             var redisSettings = Configuration
                 .GetSection("Redis")
                 .Get<RedisSettings>();
 
+
             services.AddSingleton(redisSettings);
 
-            services.AddSingleton<IConnectionMultiplexer>(
-                ConnectionMultiplexer.Connect(redisSettings.ConnectionString));
-            services.AddStackExchangeRedisCache(i => i.Configuration = redisSettings.ConnectionString);
+            //services.AddSingleton<IConnectionMultiplexer>(
+            //    ConnectionMultiplexer.Connect(redisSettings.ConnectionString));
+            //services.AddStackExchangeRedisCache(i => i.Configuration = redisSettings.ConnectionString);
 
+            services.AddSingleton<ConnectionMultiplexer>(sp =>
+            {
+                var configuration = ConfigurationOptions.Parse(redisSettings.ConnectionString, true);
+
+                configuration.ResolveDns = true;
+
+                return ConnectionMultiplexer.Connect(configuration);
+            });
+
+
+            services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(sp =>
+                (DbConnection conn) => new IntegrationEventLogService(conn)
+            );
 
             var rabbitMQSettings = Configuration
                 .GetSection(RabbitMQSettings.RabbitMQ)
@@ -103,6 +122,8 @@ namespace Basket.Api
             });
 
             services.AddSingleton<ISubscriptionsManager, InMemorySubscriptionsManager>();
+
+            services.AddTransient<ProductPriceChangedIntegrationEventHandler>();
 
             services.AddControllers();
 
@@ -175,6 +196,9 @@ namespace Basket.Api
             {
                 endpoints.MapControllers();
             });
+
+            var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
+            eventBus.Subscribe<ProductPriceChangedIntegrationEvent, ProductPriceChangedIntegrationEventHandler>();
         }
     }
 }
