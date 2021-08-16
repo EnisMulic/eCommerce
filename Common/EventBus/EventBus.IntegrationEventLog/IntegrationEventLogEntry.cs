@@ -7,6 +7,10 @@ namespace EventBus.IntegrationEventLog
 {
     public class IntegrationEventLogEntry
     {
+        public IntegrationEventLogEntry()
+        {
+        }
+
         public IntegrationEventLogEntry(IntegrationEvent @event, Guid transactionId)
         {
             EventId = @event.Id;
