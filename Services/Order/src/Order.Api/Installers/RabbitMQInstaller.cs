@@ -45,7 +45,7 @@ namespace Order.Api.Installers
             services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
             {
                 var persistentConnection = sp.GetRequiredService<IPersistentConnection>();
-                var logger = sp.GetRequiredService<Logger<EventBusRabbitMQ>>();
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
                 var subscriptionClientName = configuration["SubscriptionClientName"];
                 var lifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                 var subscriptionManager = sp.GetRequiredService<ISubscriptionsManager>();
