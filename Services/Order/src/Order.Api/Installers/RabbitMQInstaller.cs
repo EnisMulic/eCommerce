@@ -22,6 +22,7 @@ namespace Order.Api.Installers
                 var factory = new ConnectionFactory
                 {
                     HostName = settings.HostName,
+                    Port = settings.Port,
                     DispatchConsumersAsync = true
                 };
 
