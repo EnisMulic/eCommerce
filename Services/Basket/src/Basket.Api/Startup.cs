@@ -84,6 +84,7 @@ namespace Basket.Api
                 var factory = new ConnectionFactory
                 {
                     HostName = rabbitMQSettings.HostName,
+                    Port = rabbitMQSettings.Port,
                     DispatchConsumersAsync = true
                 };
 
@@ -106,7 +107,7 @@ namespace Basket.Api
             services.AddSingleton<IEventBus, EventBusRabbitMQ>(sp =>
             {
                 var persistentConnection = sp.GetRequiredService<IPersistentConnection>();
-                var logger = sp.GetRequiredService<Logger<EventBusRabbitMQ>>();
+                var logger = sp.GetRequiredService<ILogger<EventBusRabbitMQ>>();
                 var subscriptionClientName = Configuration["SubscriptionClientName"];
                 var lifetimeScope = sp.GetRequiredService<ILifetimeScope>();
                 var subscriptionManager = sp.GetRequiredService<ISubscriptionsManager>();
