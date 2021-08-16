@@ -22,7 +22,7 @@ namespace EventBus.IntegrationEventLog.Services
 
             _context = new IntegrationEventLogContext(
                 new DbContextOptionsBuilder<IntegrationEventLogContext>()
-                    .UseSqlServer(_dbConnection).Options);
+                    .UseNpgsql(_dbConnection).Options);
 
             _eventTypes = Assembly.Load(Assembly.GetEntryAssembly().FullName)
                 .GetTypes()

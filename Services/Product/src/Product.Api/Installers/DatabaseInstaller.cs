@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EventBus.IntegrationEventLog;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Product.Core.Interfaces;
@@ -13,6 +14,11 @@ namespace Product.Api.Installers
         {
             services.AddDbContext<ProductDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<IntegrationEventLogContext>(options =>
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"), 
+                i => i.MigrationsAssembly("Product.Database"))
+            );
 
             services.AddScoped<IImageUploadService, ImageUploadService>();
 
