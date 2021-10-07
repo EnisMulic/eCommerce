@@ -31,7 +31,7 @@ namespace Product.Api.Installers
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows()
                     {
-                        ClientCredentials = new OpenApiOAuthFlow()
+                        Implicit = new OpenApiOAuthFlow()
                         {
                             AuthorizationUrl = new Uri($"{identityUrl}/connect/authorize"),
                             TokenUrl = new Uri($"{identityUrl}/connect/token"),
@@ -41,7 +41,7 @@ namespace Product.Api.Installers
                                 { ProductApi.Scope.Write.Name, ProductApi.Scope.Write.DisplayName },
                                 { ProductApi.Scope.Delete.Name, ProductApi.Scope.Delete.DisplayName }
                             }
-                        }
+                        },
                     }
                 });
                 options.OperationFilter<AuthorizeCheckOperationFilter>();
