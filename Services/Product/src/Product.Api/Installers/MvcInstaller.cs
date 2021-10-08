@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Product.Api.Authorization;
 using Product.Api.Filters;
 using Product.Core.Helpers;
 
@@ -53,6 +54,24 @@ namespace Product.Api.Installers
                         ValidateAudience = false
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PolicyConstants.ProductApiReadPolicy, policy =>
+                {
+                    policy.RequireClaim("permission", ProductApi.Scope.Read.Name);
+                });
+
+                options.AddPolicy(PolicyConstants.ProductApiWritePolicy, policy =>
+                {
+                    policy.RequireClaim("permission", ProductApi.Scope.Write.Name);
+                });
+
+                options.AddPolicy(PolicyConstants.ProductApiDeletePolicy, policy =>
+                {
+                    policy.RequireClaim("permission", ProductApi.Scope.Delete.Name);
+                });
+            });
         }
     }
 }

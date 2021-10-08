@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Product.Api.Authorization;
 using Product.Contracts.Requests;
 using Product.Core.Interfaces;
 using System;
@@ -18,7 +19,6 @@ namespace Product.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public virtual async Task<IActionResult> GetAsync([FromQuery] TSearch search, [FromQuery] PaginationQuery pagination, [FromQuery] SortQuery sort)
         {
             var response = await _service.GetAsync(search, pagination, sort);
@@ -32,7 +32,6 @@ namespace Product.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize]
         public virtual async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var response = await _service.GetByIdAsync(id);

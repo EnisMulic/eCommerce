@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Product.Api.Authorization;
 using Product.Contracts;
 using Product.Contracts.Requests;
 using Product.Contracts.Responses;
@@ -36,7 +37,7 @@ namespace Product.Api.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Product.Post)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.ProductApiWritePolicy)]
         public override async Task<IActionResult> InsertAsync([FromQuery] ProductInsertRequest request)
         {
             return await base.InsertAsync(request);
@@ -44,7 +45,7 @@ namespace Product.Api.Controllers
 
         [HttpPut]
         [Route(ApiRoutes.Product.Put)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.ProductApiWritePolicy)]
         public override async Task<IActionResult> UpdateAsync(Guid id, [FromQuery] ProductUpdateRequest request)
         {
             return await base.UpdateAsync(id, request);
@@ -52,7 +53,7 @@ namespace Product.Api.Controllers
 
         [HttpDelete]
         [Route(ApiRoutes.Product.Delete)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.ProductApiDeletePolicy)]
         public override Task<IActionResult> DeleteAsync(Guid id)
         {
             return base.DeleteAsync(id);
@@ -60,7 +61,7 @@ namespace Product.Api.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Product.AddAttribute)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.ProductApiWritePolicy)]
         public async Task<IActionResult> AddAttributeAsync(Guid id, List<ProductAttributeValueInsertRequest> request)
         {
             var response = await _service.AddAttributesAsync(id, request);
@@ -75,7 +76,7 @@ namespace Product.Api.Controllers
 
         [HttpPatch]
         [Route(ApiRoutes.Product.PatchAttribute)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.ProductApiWritePolicy)]
         public async Task<IActionResult> PatchAttributeAsync(Guid id, Guid attributeValueId, ProductAttributePatchRequest request)
         {
             var response = await _service.PatchAttributeAsync(id, attributeValueId, request);
@@ -90,7 +91,7 @@ namespace Product.Api.Controllers
 
         [HttpDelete]
         [Route(ApiRoutes.Product.DeleteAttribute)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.ProductApiDeletePolicy)]
         public async Task<IActionResult> DeleteAttributeAsync(Guid id, ProductAttributeValueDeleteRequest request)
         {
             var response = await _service.DeleteAttributesAsync(id, request);
@@ -105,7 +106,7 @@ namespace Product.Api.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Product.AddCategories)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.ProductApiWritePolicy)]
         public async Task<IActionResult> AddCategoriesAsync(Guid id, List<Guid> request)
         {
             var response = await _service.AddCategoriesAsync(id, request);
@@ -120,7 +121,7 @@ namespace Product.Api.Controllers
 
         [HttpDelete]
         [Route(ApiRoutes.Product.DeleteCategories)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.ProductApiDeletePolicy)]
         public async Task<IActionResult> DeleteCategoriesAsync(Guid id, List<Guid> request)
         {
             var response = await _service.DeleteCategoriesAsync(id, request);
