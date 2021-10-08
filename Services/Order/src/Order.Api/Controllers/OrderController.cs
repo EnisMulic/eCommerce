@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Order.Api.Authorization;
 using Order.Api.Extensions;
 using Order.Contracts;
 using Order.Contracts.Requests;
@@ -23,7 +24,7 @@ namespace Order.Api.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Order.Get)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.OrderApiReadPolicy)]
         public async Task<IActionResult> GetAsync([FromQuery] PaginationQuery pagination)
         {
             var buyerId = HttpContext.GetBuyerId();
@@ -41,7 +42,7 @@ namespace Order.Api.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Order.GetById)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.OrderApiReadPolicy)]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var query = new GetOrderByIdQuery(id);
@@ -57,7 +58,7 @@ namespace Order.Api.Controllers
 
         [HttpPatch]
         [Route(ApiRoutes.Order.Cancel)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.OrderApiWritePolicy)]
         public async Task<IActionResult> CancelAsync(Guid id)
         {
             var command = new CancelOrderCommand(id);
@@ -73,7 +74,7 @@ namespace Order.Api.Controllers
 
         [HttpPatch]
         [Route(ApiRoutes.Order.Ship)]
-        [Authorize]
+        [Authorize(Policy = PolicyConstants.OrderApiWritePolicy)]
         public async Task<IActionResult> ShipAsync(Guid id)
         {
             var command = new ShipOrderCommand(id);

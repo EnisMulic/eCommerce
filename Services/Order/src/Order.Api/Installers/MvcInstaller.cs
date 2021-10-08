@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Order.Api.Authorization;
 using Order.Core.Helpers;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -38,6 +39,19 @@ namespace Order.Api.Installers
                         ValidateAudience = false
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PolicyConstants.OrderApiReadPolicy, policy =>
+                {
+                    policy.RequireClaim("permission", OrderApi.Scope.Read.Name);
+                });
+
+                options.AddPolicy(PolicyConstants.OrderApiWritePolicy, policy =>
+                {
+                    policy.RequireClaim("permission", OrderApi.Scope.Write.Name);
+                });
+            });
         }
     }
 }
