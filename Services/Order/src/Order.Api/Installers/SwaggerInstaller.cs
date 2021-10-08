@@ -24,7 +24,7 @@ namespace Order.Api.Installers
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows()
                     {
-                        ClientCredentials = new OpenApiOAuthFlow()
+                        Implicit = new OpenApiOAuthFlow()
                         {
                             AuthorizationUrl = new Uri($"{identityUrl}/connect/authorize"),
                             TokenUrl = new Uri($"{identityUrl}/connect/token"),

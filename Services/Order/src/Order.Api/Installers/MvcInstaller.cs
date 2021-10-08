@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Common.Order.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -23,16 +24,13 @@ namespace Order.Api.Installers
 
             services.AddScoped(typeof(IResponseBuilder<>), typeof(ResponseBuilder<>));
 
-            // prevent from mapping "sub" claim to nameidentifier.
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
-
             var identityUrl = configuration.GetValue<string>("IdentityUrl");
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
                     options.Authority = identityUrl;
-                    options.Audience = "Order Api";
+                    options.Audience = OrderApi.Resource.Name;
                     options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
