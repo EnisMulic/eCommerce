@@ -128,9 +128,6 @@ namespace Basket.Api
 
             services.AddControllers();
 
-            // prevent from mapping "sub" claim to nameidentifier.
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
-
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -156,7 +153,7 @@ namespace Basket.Api
                     Type = SecuritySchemeType.OAuth2,
                     Flows = new OpenApiOAuthFlows()
                     {
-                        ClientCredentials = new OpenApiOAuthFlow()
+                        Implicit = new OpenApiOAuthFlow()
                         {
                             AuthorizationUrl = new Uri($"{identityUrl}/connect/authorize"),
                             TokenUrl = new Uri($"{identityUrl}/connect/token"),
