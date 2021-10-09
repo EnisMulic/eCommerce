@@ -1,4 +1,5 @@
 using Autofac;
+using Basket.Api.Authorization;
 using Basket.Api.Filters;
 using Basket.Api.IntegrationEvents;
 using Basket.Api.Repository;
@@ -134,7 +135,7 @@ namespace Basket.Api
                 .AddJwtBearer(options =>
                 {
                     options.Authority = identityUrl;
-                    options.Audience = "Order Api";
+                    options.Audience = BasketApi.Resource.Name;
                     options.TokenValidationParameters.ValidTypes = new[] { "at+jwt" };
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -142,6 +143,14 @@ namespace Basket.Api
                         ValidateAudience = false
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(PolicyConstants.BasketApiPolicy, policy =>
+                {
+                    policy.RequireClaim("permission", BasketApi.Resource.Name);
+                });
+            });
 
             services.AddSwaggerGen(options =>
             {

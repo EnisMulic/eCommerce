@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Basket.Api.Authorization;
 using Basket.Api.Extensions;
 using Basket.Api.Repository;
 using Basket.Contracts;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 namespace Basket.Api.Controllers
 {
     [ApiController]
+    [Authorize(Policy = PolicyConstants.BasketApiPolicy)]
     public class BasketController : ControllerBase
     {
         private readonly IBasketRepository _repository;
@@ -26,7 +28,6 @@ namespace Basket.Api.Controllers
 
         [HttpGet]
         [Route(ApiRoutes.Basket.Get)]
-        [Authorize]
         public async Task<IActionResult> Get()
         {
             var customerId = HttpContext.GetCustomerId();
@@ -39,7 +40,6 @@ namespace Basket.Api.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Basket.Update)]
-        [Authorize]
         public async Task<IActionResult> Update(CustomerBasketUpdateRequest request)
         {
             var customerId = HttpContext.GetCustomerId();
@@ -54,7 +54,6 @@ namespace Basket.Api.Controllers
 
         [HttpDelete]
         [Route(ApiRoutes.Basket.Delete)]
-        [Authorize]
         public async Task<IActionResult> Delete()
         {
             var customerId = HttpContext.GetCustomerId();
@@ -70,7 +69,6 @@ namespace Basket.Api.Controllers
 
         [HttpPost]
         [Route(ApiRoutes.Basket.Checkout)]
-        [Authorize]
         public async Task<IActionResult> Checkout(CheckoutRequest request)
         {
             var customerId = HttpContext.GetCustomerId();
