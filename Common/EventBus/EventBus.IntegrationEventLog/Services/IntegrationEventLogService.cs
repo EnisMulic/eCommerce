@@ -45,7 +45,7 @@ namespace EventBus.IntegrationEventLog.Services
             return new List<IntegrationEventLogEntry>();
         }
 
-        public async Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction)
+        public Task SaveEventAsync(IntegrationEvent @event, IDbContextTransaction transaction)
         {
             if (transaction == null)
             {
@@ -54,43 +54,40 @@ namespace EventBus.IntegrationEventLog.Services
 
             var eventLogEntry = new IntegrationEventLogEntry(@event, transaction.TransactionId);
 
-            _context.Database.UseTransaction(transaction.GetDbTransaction());
-            await _context.IntegrationEventLogs.AddAsync(eventLogEntry);
+            var tr = transaction.GetDbTransaction();
+            _context.Database.UseTransaction(tr);
+            _context.IntegrationEventLogs.AddAsync(eventLogEntry);
 
-            await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
 
-        public async Task MarkEventAsFailedAsync(Guid eventId)
+        public Task MarkEventAsFailedAsync(Guid eventId)
         {
-            await UpdateEventState(eventId, EventState.PublishFailed);
+            return UpdateEventState(eventId, EventState.PublishFailed);
         }
 
-        public async Task MarkEventAsInProgressAsync(Guid eventId)
+        public Task MarkEventAsInProgressAsync(Guid eventId)
         {
-            await UpdateEventState(eventId, EventState.InProgress);
+            return UpdateEventState(eventId, EventState.InProgress);
         }
 
-        public async Task MarkEventAsPublishedAsync(Guid eventId)
+        public Task MarkEventAsPublishedAsync(Guid eventId)
         {
-            await UpdateEventState(eventId, EventState.Published);
+            return UpdateEventState(eventId, EventState.Published);
         }
 
-        private async Task UpdateEventState(Guid eventId, EventState state)
+        private Task UpdateEventState(Guid eventId, EventState state)
         {
-            var @event = await _context.IntegrationEventLogs.FindAsync(eventId);
+            var @event = _context.IntegrationEventLogs.Single(i => i.EventId == eventId);
+            @event.State = state;
 
-            if (@event != null)
+            if (state == EventState.InProgress)
             {
-                @event.State = state;
-
-                if (state == EventState.InProgress)
-                {
-                    @event.TimesSent++;
-                }
-
-                _context.IntegrationEventLogs.Update(@event);
-                await _context.SaveChangesAsync();
+                @event.TimesSent++;
             }
+
+            _context.IntegrationEventLogs.Update(@event);
+            return _context.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)
