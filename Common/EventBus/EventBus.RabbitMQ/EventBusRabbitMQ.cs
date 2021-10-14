@@ -236,6 +236,7 @@ namespace EventBus.RabbitMQ
 
             Subscribe(eventName);
             _subsManager.AddSubscription<T, TH>();
+            StartBasicConsume();
         }
 
         public void SubscribeDynamic<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
@@ -245,6 +246,7 @@ namespace EventBus.RabbitMQ
 
             Subscribe(eventName);
             _subsManager.AddDynamicSubscription<TH>(eventName);
+            StartBasicConsume();
         }
 
         private void Subscribe(string eventName)
