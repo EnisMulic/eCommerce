@@ -1,10 +1,13 @@
 using Common.Product.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Product.Api.Grpc;
 using Product.Api.Installers;
+using System.IO;
 
 namespace Product.Api
 {
@@ -50,6 +53,12 @@ namespace Product.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<ProductGrpcService>();
+
+                endpoints.MapGet("/protos/product.proto", async context =>
+                {
+                    await context.Response.WriteAsync(File.ReadAllText("Protos/product.proto"));
+                });
             });
         }
     }
