@@ -1,6 +1,7 @@
 using Autofac;
 using Basket.Api.Authorization;
 using Basket.Api.Filters;
+using Basket.Api.Grpc;
 using Basket.Api.IntegrationEvents;
 using Basket.Api.Repository;
 using Basket.Api.Settings;
@@ -46,6 +47,16 @@ namespace Basket.Api
                 )
             );
 
+            services.AddGrpc();
+
+            var grpcSettings = Configuration
+                .GetSection("Grpc")
+                .Get<GrpcSettings>();
+
+            services.AddSingleton(grpcSettings);
+
+            services.AddTransient<IProductGrpcClient, ProductGrpcClient>();
+
             services.AddAutoMapper(typeof(Mappings.BasketProfile));
             services.AddTransient<IBasketRepository, BasketRepository>();
 
@@ -55,10 +66,6 @@ namespace Basket.Api
 
 
             services.AddSingleton(redisSettings);
-
-            //services.AddSingleton<IConnectionMultiplexer>(
-            //    ConnectionMultiplexer.Connect(redisSettings.ConnectionString));
-            //services.AddStackExchangeRedisCache(i => i.Configuration = redisSettings.ConnectionString);
 
             services.AddSingleton<ConnectionMultiplexer>(sp =>
             {

@@ -1,0 +1,19 @@
+﻿syntax = "proto3";
+
+package Product;
+
+message ProductGrpcRequest {
+	string id = 1;
+}
+
+message ProductGrpcResponse {
+	string id = 1;
+	string name = 2;
+	string description = 3;
+	double price = 4;
+	string imageUri = 5;
+}
+
+service ProductGrpc {
+	rpc GetProductById (ProductGrpcRequest) returns (ProductGrpcResponse) {}
+}
