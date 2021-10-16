@@ -7,6 +7,7 @@
         {
             public const string BaseRoute = Base + "/basket";
             public const string Get = BaseRoute;
+            public const string Add = BaseRoute;
             public const string Update = BaseRoute;
             public const string Delete = BaseRoute;
             public const string Checkout = BaseRoute + "/checkout";

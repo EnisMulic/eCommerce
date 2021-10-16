@@ -39,15 +39,33 @@ namespace Basket.Api.Controllers
         }
 
         [HttpPost]
-        [Route(ApiRoutes.Basket.Update)]
-        public async Task<IActionResult> Update(CustomerBasketUpdateRequest request)
+        [Route(ApiRoutes.Basket.Add)]
+        public async Task<IActionResult> Insert(CustomerBasketUpsertRequest request)
         {
             var customerId = HttpContext.GetCustomerId();
-            var basket = _mapper.Map<CustomerBasket>(request);
-            basket.CustomerId = customerId;
 
-            basket = await _repository.UpdateBasketAsync(basket);
-            var response = _mapper.Map<CustomerBasketResponse>(basket);
+            var response = await _repository.AddItemAsync(customerId.ToString(), request);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(response);
+        }
+
+
+        [HttpPatch]
+        [Route(ApiRoutes.Basket.Update)]
+        public async Task<IActionResult> Update(CustomerBasketUpsertRequest request)
+        {
+            var customerId = HttpContext.GetCustomerId();
+            var response = await _repository.UpdateItemAsync(customerId.ToString(), request);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
 
             return Ok(response);
         }
