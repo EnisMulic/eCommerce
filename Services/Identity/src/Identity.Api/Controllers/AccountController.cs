@@ -144,7 +144,8 @@ namespace Identity.Api.Controllers
 
                     var isuser = new IdentityServerUser(user.Id)
                     {
-                        DisplayName = user.UserName
+                        DisplayName = user.UserName,
+                        
                     };
 
                     await HttpContext.SignInAsync(isuser, props);

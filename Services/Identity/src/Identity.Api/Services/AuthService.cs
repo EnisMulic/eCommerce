@@ -1,7 +1,12 @@
-﻿using Identity.Api.Models;
+﻿using Common.Basket.Authorization;
+using Common.Order.Authorization;
+using Common.Product.Authorization;
+using Identity.Api.Models;
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -23,14 +28,20 @@ namespace Identity.Api.Services
             return await _userManager.FindByEmailAsync(email);
         }
 
-        public Task SignInAsync(ApplicationUser user, AuthenticationProperties properties, string authenticationMethod = null)
+        public async Task SignInAsync(ApplicationUser user, AuthenticationProperties properties, string authenticationMethod = null)
         {
-            return _signInManager.SignInAsync(user, properties, authenticationMethod);
+            await _signInManager.SignInAsync(user, properties, authenticationMethod);
         }
 
         public async Task<IdentityResult> SignUpAsync(ApplicationUser user, string password)
         {
-            return await _userManager.CreateAsync(user, password);
+            var result = await _userManager.CreateAsync(user, password);
+
+            await _userManager.AddClaimAsync(user, new Claim("api", ProductApi.Scope.Read.Name));
+            await _userManager.AddClaimAsync(user, new Claim("api", OrderApi.Scope.Read.Name));
+            await _userManager.AddClaimAsync(user, new Claim("api", BasketApi.Resource.Name));
+            
+            return result;
         }
 
         public async Task<bool> ValidateCredentialsAsync(ApplicationUser user, string password)

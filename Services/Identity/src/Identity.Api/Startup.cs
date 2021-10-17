@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
 using EventBus;
@@ -22,12 +23,14 @@ namespace Identity.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        private IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -45,23 +48,45 @@ namespace Identity.Api
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
-                .AddProfileService<ProfileService>()
-                .AddAspNetIdentity<ApplicationUser>()
-                .AddJwtBearerClientAuthentication()
-                .AddDeveloperSigningCredential()
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder => builder.UseNpgsql(
-                        connectionString,
-                        opt => opt.MigrationsAssembly(migrationAssembly));
-                })
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder => builder.UseNpgsql(
-                        connectionString,
-                        opt => opt.MigrationsAssembly(migrationAssembly));
-                });
+            Dictionary<string, string> clientUrls = new();
+
+            clientUrls.Add("ProductsApi", Configuration.GetValue<string>("ProductsApiClient"));
+            clientUrls.Add("OrdersApi", Configuration.GetValue<string>("OrdersApiClient"));
+            clientUrls.Add("BasketApi", Configuration.GetValue<string>("BasketApiClient"));
+
+            if (Environment.IsProduction())
+            {
+                services.AddIdentityServer()
+                    .AddProfileService<ProfileService>()
+                    .AddAspNetIdentity<ApplicationUser>()
+                    .AddConfigurationStore(options =>
+                    {
+                        options.ConfigureDbContext = builder => builder.UseNpgsql(
+                            connectionString,
+                            opt => opt.MigrationsAssembly(migrationAssembly));
+                    })
+                    .AddOperationalStore(options =>
+                    {
+                        options.ConfigureDbContext = builder => builder.UseNpgsql(
+                            connectionString,
+                            opt => opt.MigrationsAssembly(migrationAssembly));
+                    })
+                    .AddJwtBearerClientAuthentication()
+                    .AddDeveloperSigningCredential();
+            }
+            else
+            {
+                services.AddIdentityServer()
+                    .AddProfileService<ProfileService>()
+                    .AddAspNetIdentity<ApplicationUser>()
+                    .AddInMemoryApiResources(Config.GetApiResources())
+                    .AddInMemoryApiScopes(Config.ApiScopes)
+                    .AddInMemoryClients(Config.GetClients(clientUrls))
+                    .AddInMemoryIdentityResources(Config.IdentityResources)
+                    .AddInMemoryPersistedGrants()
+                    .AddJwtBearerClientAuthentication()
+                    .AddDeveloperSigningCredential();
+            }
 
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
@@ -70,7 +95,7 @@ namespace Identity.Api
                     options.RequireHttpsMetadata = false;
                 });
 
-            services.AddScoped<IProfileService, ProfileService>();
+            services.AddTransient<IProfileService, ProfileService>();
 
             services.AddCors(options =>
                 options.AddDefaultPolicy(builder =>

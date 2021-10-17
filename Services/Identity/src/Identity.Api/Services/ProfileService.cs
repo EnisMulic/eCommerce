@@ -1,26 +1,26 @@
 ﻿using Identity.Api.Database;
 using Identity.Api.Models;
-using IdentityModel;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
-using System.Security.Claims;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Identity.Api.Services
 {
     public class ProfileService : IProfileService
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserClaimsPrincipalFactory<ApplicationUser> _claimsFactory;
 
-        public ProfileService(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ProfileService(
+            UserManager<ApplicationUser> userManager, 
+            IUserClaimsPrincipalFactory<ApplicationUser> claimsFactory)
         {
-            _context = context;
             _userManager = userManager;
+            _claimsFactory = claimsFactory;
         }
 
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -28,18 +28,15 @@ namespace Identity.Api.Services
             var identityString = context.Subject.GetSubjectId();
             if (Guid.TryParse(identityString, out Guid id))
             {
-                var user = await _context.Users.FindAsync(id);
+                var user = await _userManager.FindByIdAsync(id.ToString());
 
                 if(user == null)
                 {
                     return;
                 }
 
-                var claims = new List<Claim>
-                {
-                    new Claim(JwtClaimTypes.Id, user.Id.ToString(), ClaimValueTypes.String),
-                    new Claim(JwtClaimTypes.PreferredUserName, user.UserName, ClaimValueTypes.String)
-                };
+                var principal = await _claimsFactory.CreateAsync(user);
+                var claims = principal.Claims.ToList();
                 
                 context.IssuedClaims = claims;
             }

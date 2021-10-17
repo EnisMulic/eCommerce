@@ -30,7 +30,7 @@ namespace Basket.Api.Grpc
                 var product = client.GetProductById(request);
                 return product;
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }

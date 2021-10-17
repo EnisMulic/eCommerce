@@ -45,7 +45,7 @@ namespace Basket.Api.Repository
 
                     var serializedBasket = JsonConvert.SerializeObject(customerBasket);
 
-                    await _database.StringSetAsync(Convert.ToString(customerBasket.CustomerId), serializedBasket);
+                    await _database.StringSetAsync(customerId, serializedBasket);
 
                     return customerBasket;
                 }
